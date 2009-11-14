@@ -23,7 +23,7 @@ struct delete_array_policy
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 // This is the smart pointer template, which takes pointer type and
-// a destruct policy, which it uses to desruct object(s) pointed to
+// a destruct policy, which it uses to destruct object(s) pointed to
 // when the reference counter for the object becomes zero.
 template <
 	typename ptrT,
@@ -120,7 +120,7 @@ public:
 	// Invokes the -> operator on the pointer pointed too
 	// NB. When you call the -> operator, the compiler  automatically
 	//     calls the -> on the entity returned. This is a special,
-	//     case, done to preserve normal indirection smenatics.
+	//     case, done to preserve normal indirection semantics.
 	ptr_type * operator -> () const { return px_; }
 	
 	//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=	
@@ -128,10 +128,10 @@ public:
 	ptr_type * get() const { return px_; }
 	
 	//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-	// Conversion to bool operator to faciliate logcal pointer tests.
+	// Conversion to bool operator to facilitate logical pointer tests.
 	// Returns a value that will logically be true if get != 0 else
 	// and value that is logically false. We don't return a real
-	// bool to prevent un-wanted automatic implicit convertion for
+	// bool to prevent un-wanted automatic implicit conversion for
 	// instances where it would make no semantic sense, rather we
 	// return a pointer to a member function as this will always
 	// implicitly convert to true or false when used in a boolean
