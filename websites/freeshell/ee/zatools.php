@@ -6,8 +6,11 @@
 </head>
 <body>
 
-<h1>EE Zone Advisor Admin Tools</h1>
-<h2>by <a target="_blank" style="text-decoration:none;color:black;" href="http://www.experts-exchange.com/M_2850883.html">evilrix</a></h2>
+<h1>EE Zone Advisor Admin Tools (v3.0)</h1>
+<h2>
+by <a target="_blank" style="text-decoration:none;color:black;" href="http://www.e-e.com/M_2850883.html">evilrix</a> and
+<a target="_blank" style="text-decoration:none;color:black;" href="http://www.e-e.com/M_3651209.html">tigermatt</a> 
+</h2>
 
 <div id="delete" style="display:none;">
 <h2>Automatic Delete</h2>
@@ -163,6 +166,19 @@
 </form>
 </div>
 
+<div id="unaccept" style="display:none;">
+<h2>Unaccept Answer(s)</h2> 
+<form action="http://www.experts-exchange.com/admin/question/unaccept.jsp" method="get"> 
+  <table border="0"> 
+    <tr> 
+      <td>Question ID:</td> 
+      <td><input type="text" name="qid" /></td> 
+      <td><input type="submit" value="Unaccept" /></td> 
+    </tr> 
+  </table> 
+</form>
+</div>
+
 <script type="text/javascript">
 <!--
 function set(idx)
@@ -188,6 +204,7 @@ function set(idx)
 		<option value="close">Close question</option>
 		<option value="accept">Accept answer</option>
 		<option value="split">Split answers</option>
+		<option value="unaccept">Unaccept answer(s)</option>
 	</select>
 </form>
 
