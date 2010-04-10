@@ -168,6 +168,7 @@
 function set(idx)
 {
 	container = document.getElementById('container');
+	html="";
 
 	if(idx > 0)
 	{
