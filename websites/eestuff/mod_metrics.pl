@@ -2,6 +2,7 @@ use strict;
 use threads;
 use threads::shared;
 use Thread::Queue;
+use Date::Calc;
 use XML::Simple;
 use LWP::UserAgent;
 use HTTP::Cookies;
@@ -59,8 +60,8 @@ my $output_mutex: shared;
 
 # Authenticate with EE
 sub authenticate {
-   # We'll need a cookie jar for logging in
-   my $cookie_jar = HTTP::Cookies->new();
+   # We'll need a temporary cookie jar for authenticating
+   my $cookie_jar = HTTP::Cookies->new({});
    
    # Next we need a user agent
    my $ua = LWP::UserAgent->new;
@@ -68,7 +69,7 @@ sub authenticate {
    $ua->cookie_jar($cookie_jar);
    
    # Some credentials
-   my $user = "automodxxxx";
+   my $user = "automod";
    my $pass = "0316at1na";
    
    # The endpoints
@@ -87,18 +88,19 @@ sub authenticate {
       if($error = $content =~ /Invalid Username\/Email and Password combination/) {
          lock $output_mutex;
          print "AUTHENTICALTION FAILURE\n";
+         return undef;
       }
    }
 
    # We now have an authenticated user agent, return it for use
-   return $ua unless $error;
+   return $ua;
 }
 
 # Each thread will process the queue until it is drained
 sub thread_proc {
 
-   # Get an authenticaled user agent (undef on error!)
-   my $ua = authenticate(shift);
+   # Get an authenticated user agent (undef on error!)
+   my $ua = authenticate;
    return unless defined $ua;
 
    # Create the XML result object
@@ -106,10 +108,10 @@ sub thread_proc {
    my $users = $results{user};
 
    # Process the queue
-   while($queue->pending()) {
+   while($queue->pending) {
       
       # Get an item from the queue and create a uri
-      my $uid = $queue->dequeue_nb();
+      my $uid = $queue->dequeue_nb;
       
       if(defined $uid) {
          my $uri = "http://www.experts-exchange.com/M_$uid.html";
@@ -126,10 +128,25 @@ sub thread_proc {
          
          # Scrape the data
          my %result;
+         $result{usrid} = $uid;
+         $result{hpage} = $uri;
          $result{login} = $1 if($content =~ s/$filters{login}//);
          $result{rdate} = $1 if($content =~ s/$filters{rdate}//);
          $result{qansw} = $1 if($content =~ s/$filters{qansw}//);
          $result{qpart} = $1 if($content =~ s/$filters{qpart}//);
+
+         # Remove numeric command (eg. 1,000,000 to 1000000) 
+         $result{qansw} =~ s/,//g;
+         $result{qpart} =~ s/,//g;
+         
+         # Get aggregated answer and question participation
+         $result{aggre} = $result{qansw} + $result{qpart};
+         
+         #                      1:MM   2:DD   3:YY
+         if($result{rdate} =~ /(\d+)\D(\d+)\D(\d+)/) {
+            $result{rdate} = 2000+$3 . "-$1-$2"; # ISO format (we're not all American!!!
+            $result{rdays} = Date::Calc::Delta_Days(2000+$3,$1,$2, Date::Calc::Today(1));
+         }
 
          push @$users, \%result;
       }
@@ -154,6 +171,47 @@ sub queue_work {
       }
 }
 
+# Generate the report metics
+sub generate_metrics {
+   my $results = shift;
+   
+   my $users = $results->{user};
+   
+   my %totals = (
+         answ => 0,
+         part => 0,
+         aggr => 0,
+         days => 0
+      );
+
+   # Calc totals
+   foreach (@$users) {
+      # Get totals
+      $totals{answ} += $_->{qansw};
+      $totals{part} += $_->{qpart};
+      $totals{aggr} += $_->{aggre};
+      $totals{days} += $_->{rdays};
+   }
+
+   my %averages = (
+         answ => ($totals{answ} / $totals{days}),
+         part => ($totals{part} / $totals{days}),
+         aggr => ($totals{aggr} / $totals{days}),
+      );
+
+   # Calc averages
+   foreach (@$users) {
+      # Get totals
+      $_->{aperd} = ($_->{qansw} / $_->{rdays});
+      $_->{cperd} = ($_->{qpart} / $_->{rdays});
+      $_->{gperd} = ($_->{aggre} / $_->{rdays});
+
+      $_->{answp} = (($_->{aperd} / $averages{answ}) * 100);
+      $_->{commp} = (($_->{cperd} / $averages{part}) * 100);
+      $_->{aggrp} = (($_->{gperd} / $averages{aggr}) * 100);
+   }
+}
+
 # And so it begins
 sub main {
    # Create a queue of items to process
@@ -171,6 +229,10 @@ sub main {
          @$rusers = (@$rusers, @$eusers);
       }
    }
+   
+   die "Fatal error" unless %results;
+   
+   generate_metrics(\%results);
    
    # Print results
    print XMLout(\%results, RootName => "users", XMLDecl => 1);
