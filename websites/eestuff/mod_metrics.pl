@@ -4,6 +4,7 @@ use threads::shared;
 use Thread::Queue;
 use XML::Simple;
 use LWP::UserAgent;
+use HTTP::Cookies;
 
 # Add all user IDs here
 my @uids = (
@@ -53,12 +54,57 @@ my %filters = (
 # A global queue of work
 my $queue = Thread::Queue->new();
 
+# An output mutex (to make sure we can report thread errors safely)
+my $output_mutex: shared;
+
+# Authenticate with EE
+sub authenticate {
+   # We'll need a cookie jar for logging in
+   my $cookie_jar = HTTP::Cookies->new();
+   
+   # Next we need a user agent
+   my $ua = LWP::UserAgent->new;
+   $ua->timeout(60);
+   $ua->cookie_jar($cookie_jar);
+   
+   # Some credentials
+   my $user = "automodxxxx";
+   my $pass = "0316at1na";
+   
+   # The endpoints
+   my $uri = "https://secure.experts-exchange.com/login.jsp?msuLoginName=$user&msuPassword=$pass&msuLoginSubmit=1";
+   
+   # Create a request to authenticate
+   my $req = HTTP::Request->new(POST => $uri);
+   
+   # Authenticate
+   my $res = $ua->request($req);
+
+   # Best endevours attempt to handle errors and authentication failure
+   my $error = $res->is_error;
+   unless($error) {
+      my $content = $res->content;
+      if($error = $content =~ /Invalid Username\/Email and Password combination/) {
+         lock $output_mutex;
+         print "AUTHENTICALTION FAILURE\n";
+      }
+   }
+
+   # We now have an authenticated user agent, return it for use
+   return $ua unless $error;
+}
+
 # Each thread will process the queue until it is drained
 sub thread_proc {
+
+   # Get an authenticaled user agent (undef on error!)
+   my $ua = authenticate(shift);
+   return unless defined $ua;
+
    # Create the XML result object
    my %results = (user => []);
    my $users = $results{user};
-   
+
    # Process the queue
    while($queue->pending()) {
       
@@ -67,11 +113,7 @@ sub thread_proc {
       
       if(defined $uid) {
          my $uri = "http://www.experts-exchange.com/M_$uid.html";
-   
-         # Create a user agent      
-         my $ua = LWP::UserAgent->new;
-         $ua->timeout(60);
-   
+
          # Create a HTTP request
          my $req = HTTP::Request->new(POST => $uri);
          $req->content_type('application/x-www-form-urlencoded');
@@ -88,8 +130,6 @@ sub thread_proc {
          $result{rdate} = $1 if($content =~ s/$filters{rdate}//);
          $result{qansw} = $1 if($content =~ s/$filters{qansw}//);
          $result{qpart} = $1 if($content =~ s/$filters{qpart}//);
-         
-         print "$uri\n" unless defined $result{login};
 
          push @$users, \%result;
       }
@@ -100,12 +140,11 @@ sub thread_proc {
 
 # Add user ids to the queue for processing by thread pool
 sub queue_work {
-    
       # Add work to queue  
       foreach (@uids) {
          $queue->enqueue($_);
       }
-   
+      
       # Create thread pool and process queue
       foreach (1 .. 5) {
          threads->create(
@@ -124,9 +163,13 @@ sub main {
    my %results = (user => []);
    foreach (threads->list()) {
       my %element = $_->join();
-      my $eusers = $element{user};
-      my $rusers = $results{user};
-      @$rusers = (@$rusers, @$eusers);
+      
+      if (%element)
+      {
+         my $eusers = $element{user};
+         my $rusers = $results{user};
+         @$rusers = (@$rusers, @$eusers);
+      }
    }
    
    # Print results
