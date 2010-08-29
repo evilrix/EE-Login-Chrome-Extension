@@ -152,6 +152,7 @@ sub thread_proc {
             $result{rdays} = Date::Calc::Delta_Days(2000+$3,$1,$2, Date::Calc::Today(1));
          }
 
+		 # Metrics per day
          $result{aperd} = sprintf("%.3f", ($result{qansw} / $result{rdays}));
          $result{cperd} = sprintf("%.3f", ($result{qpart} / $result{rdays}));
          $result{gperd} = sprintf("%.3f", ($result{aggre} / $result{rdays}));
