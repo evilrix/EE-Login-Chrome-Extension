@@ -1,3 +1,5 @@
+#!/usr/bin/perl
+
 use strict;
 use threads;
 use threads::shared;
@@ -6,6 +8,8 @@ use Date::Calc;
 use XML::Simple;
 use LWP::UserAgent;
 use HTTP::Cookies;
+use Getopt::Long;
+use Data::Dumper;
 
 # Add all user IDs here
 my @uids = (
@@ -129,7 +133,7 @@ sub thread_proc {
          # Scrape the data
          my %result;
          $result{usrid} = $uid;
-         $result{hpage} = $uri;
+         $result{uprof} = $uri;
          $result{login} = $1 if($content =~ s/$filters{login}//);
          $result{rdate} = $1 if($content =~ s/$filters{rdate}//);
          $result{qansw} = $1 if($content =~ s/$filters{qansw}//);
@@ -148,6 +152,10 @@ sub thread_proc {
             $result{rdays} = Date::Calc::Delta_Days(2000+$3,$1,$2, Date::Calc::Today(1));
          }
 
+         $result{aperd} = ($result{qansw} / $result{rdays});
+         $result{cperd} = ($result{qpart} / $result{rdays});
+         $result{gperd} = ($result{aggre} / $result{rdays});
+         
          push @$users, \%result;
       }
    }
@@ -174,46 +182,82 @@ sub queue_work {
 # Generate the report metics
 sub generate_metrics {
    my $results = shift;
-   
    my $users = $results->{user};
-   
+  
+   # Total per day counts
    my %totals = (
-         answ => 0,
-         part => 0,
-         aggr => 0,
-         days => 0
+         aperd => 0,
+         cperd => 0,
+         gperd => 0
       );
 
-   # Calc totals
+   # Accrue the total per day counts
    foreach (@$users) {
-      # Get totals
-      $totals{answ} += $_->{qansw};
-      $totals{part} += $_->{qpart};
-      $totals{aggr} += $_->{aggre};
-      $totals{days} += $_->{rdays};
+      $totals{aperd} += $_->{aperd};
+      $totals{cperd} += $_->{cperd};
+      $totals{gperd} += $_->{gperd};
    }
 
-   my %averages = (
-         answ => ($totals{answ} / $totals{days}),
-         part => ($totals{part} / $totals{days}),
-         aggr => ($totals{aggr} / $totals{days}),
-      );
-
-   # Calc averages
+   # Figure out what % a mods per day count is of the total per day
    foreach (@$users) {
-      # Get totals
-      $_->{aperd} = ($_->{qansw} / $_->{rdays});
-      $_->{cperd} = ($_->{qpart} / $_->{rdays});
-      $_->{gperd} = ($_->{aggre} / $_->{rdays});
-
-      $_->{answp} = (($_->{aperd} / $averages{answ}) * 100);
-      $_->{commp} = (($_->{cperd} / $averages{part}) * 100);
-      $_->{aggrp} = (($_->{gperd} / $averages{aggr}) * 100);
+      $_->{answp} = (($_->{aperd} / $totals{aperd}) * 100);
+      $_->{commp} = (($_->{cperd} / $totals{cperd}) * 100);
+      $_->{aggrp} = (($_->{gperd} / $totals{gperd}) * 100);
    }
 }
 
+sub print_xml {
+   print XMLout(shift, RootName => "users", XMLDecl => 1);
+}
+
+sub print_html {
+   my $results = shift;
+   my $users = $results->{user};
+
+   # Start html document
+   print '<!doctype HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
+   print '<html><head>\n';
+   print '<title>Moderator Statistics</title>\n';
+   print '</head>\n';
+   print '<body><table width=100%>\n';
+
+   # Print table header
+   print "<tr>\n";
+   my $user = $users->[0];
+   foreach (keys %$user) {
+      print "<th>$_</th>\n";
+   }
+   print "</tr>\n";
+   
+   # Print table data
+   foreach $user (@$users) {
+      print "<tr>\n";
+      foreach (keys %$user) {
+         print "<td>$user->{$_}</td>\n";
+      }
+      print "</tr>\n";
+   }
+   
+   # End html document
+   print '</table></body>\n';
+   print '</html>\n';
+}
+
+my %print_results = (
+      xml => \&print_xml,
+      html => \&print_html,
+   );
+
 # And so it begins
 sub main {
+   my $format="xml";
+   GetOptions(
+         "format=s", => sub {
+         die "Unknown output format" if($_[1] !~ /^(?:html|xml)$/);
+         $format = $_[1]
+      }
+   );
+
    # Create a queue of items to process
    queue_work;
    
@@ -234,8 +278,7 @@ sub main {
    
    generate_metrics(\%results);
    
-   # Print results
-   print XMLout(\%results, RootName => "users", XMLDecl => 1);
+   $print_results{$format}(\%results);
 }
 
 # Entry point
