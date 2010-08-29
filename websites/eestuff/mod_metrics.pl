@@ -152,9 +152,9 @@ sub thread_proc {
             $result{rdays} = Date::Calc::Delta_Days(2000+$3,$1,$2, Date::Calc::Today(1));
          }
 
-         $result{aperd} = ($result{qansw} / $result{rdays});
-         $result{cperd} = ($result{qpart} / $result{rdays});
-         $result{gperd} = ($result{aggre} / $result{rdays});
+         $result{aperd} = sprintf("%.3f", ($result{qansw} / $result{rdays}));
+         $result{cperd} = sprintf("%.3f", ($result{qpart} / $result{rdays}));
+         $result{gperd} = sprintf("%.3f", ($result{aggre} / $result{rdays}));
          
          push @$users, \%result;
       }
@@ -200,9 +200,9 @@ sub generate_metrics {
 
    # Figure out what % a mods per day count is of the total per day
    foreach (@$users) {
-      $_->{answp} = (($_->{aperd} / $totals{aperd}) * 100);
-      $_->{commp} = (($_->{cperd} / $totals{cperd}) * 100);
-      $_->{aggrp} = (($_->{gperd} / $totals{gperd}) * 100);
+      $_->{answp} = sprintf("%.3f", (($_->{aperd} / $totals{aperd}) * 100));
+      $_->{commp} = sprintf("%.3f", (($_->{cperd} / $totals{cperd}) * 100));
+      $_->{aggrp} = sprintf("%.3f", (($_->{gperd} / $totals{gperd}) * 100));
    }
 }
 
@@ -215,32 +215,54 @@ sub print_html {
    my $users = $results->{user};
 
    # Start html document
-   print '<!doctype HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
-   print '<html><head>\n';
-   print '<title>Moderator Statistics</title>\n';
-   print '</head>\n';
-   print '<body><table width=100%>\n';
+   print "<!doctype HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">";
+   print "<html><head>\n";
+   print "<title>Moderator Statistics</title>\n";
+   print "</head>\n";
+   print "<body><table width=100% border=1>\n";
 
    # Print table header
    print "<tr>\n";
-   my $user = $users->[0];
-   foreach (keys %$user) {
-      print "<th>$_</th>\n";
-   }
+   print "<th>Moderator</th>\n";
+   print "<th>Days</th>\n";
+   print "<th>Answers</th>\n";
+   print "<th>Comments</th>\n";
+   print "<th>Aggregate</th>\n";
+   print "<th>Answers/day</th>\n";
+   print "<th>Comments/day</th>\n";
+   print "<th>Aggregate/day</th>\n";
+   print "<th>%Answers/day</th>\n";
+   print "<th>%Comments/day</th>\n";
+   print "<th>%Aggregate/day</th>\n";
    print "</tr>\n";
    
    # Print table data
-   foreach $user (@$users) {
-      print "<tr>\n";
-      foreach (keys %$user) {
-         print "<td>$user->{$_}</td>\n";
-      }
+   my @background = (
+      "background-color:white;",
+      "background-color:lightgrey;"
+      );
+   
+   my $idx = 0;
+   foreach my $user (@$users) {
+      my $style = $background[++$idx % 2];
+      print "<tr style='text-align:right; $style'>\n";
+      print "<td>$user->{login}</td>\n";
+      print "<td>$user->{rdays}</td>\n";
+      print "<td>$user->{qansw}</td>\n";
+      print "<td>$user->{qpart}</td>\n";
+      print "<td>$user->{aggre}</td>\n";
+      print "<td>$user->{aperd}</td>\n";
+      print "<td>$user->{cperd}</td>\n";
+      print "<td>$user->{gperd}</td>\n";
+      print "<td>$user->{answp}</td>\n";
+      print "<td>$user->{commp}</td>\n";
+      print "<td>$user->{aggrp}</td>\n";
       print "</tr>\n";
    }
    
    # End html document
-   print '</table></body>\n';
-   print '</html>\n';
+   print "</table></body>\n";
+   print "</html>\n";
 }
 
 my %print_results = (
