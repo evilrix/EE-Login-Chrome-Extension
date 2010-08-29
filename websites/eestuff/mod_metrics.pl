@@ -54,6 +54,7 @@ my %filters = (
       rdate => '<span>([\d/]+)</span>\s+Registration Date',
       qansw => '<span>([\d,]+)</span>\s+Questions? Answered',
       qpart => '<span>([\d,]+)</span>\s+Questions? Participated In',
+      qpost => '<span>([\d,]+)</span>\s+Comments Posted',
    );
 
 # A global queue of work
@@ -138,13 +139,15 @@ sub thread_proc {
          $result{rdate} = $1 if($content =~ s/$filters{rdate}//);
          $result{qansw} = $1 if($content =~ s/$filters{qansw}//);
          $result{qpart} = $1 if($content =~ s/$filters{qpart}//);
+         $result{qpost} = $1 if($content =~ s/$filters{qpost}//);
 
          # Remove numeric command (eg. 1,000,000 to 1000000) 
          $result{qansw} =~ s/,//g;
          $result{qpart} =~ s/,//g;
+         $result{qpost} =~ s/,//g;
          
          # Get aggregated answer and question participation
-         $result{aggre} = $result{qansw} + $result{qpart};
+         $result{aggre} = $result{qansw} + $result{qpart} + $result{qpost};
          
          #                      1:MM   2:DD   3:YY
          if($result{rdate} =~ /(\d+)\D(\d+)\D(\d+)/) {
@@ -154,7 +157,8 @@ sub thread_proc {
 
 		 # Metrics per day
          $result{aperd} = sprintf("%.3f", ($result{qansw} / $result{rdays}));
-         $result{cperd} = sprintf("%.3f", ($result{qpart} / $result{rdays}));
+         $result{qperd} = sprintf("%.3f", ($result{qpart} / $result{rdays}));
+         $result{pperd} = sprintf("%.3f", ($result{qpost} / $result{rdays}));
          $result{gperd} = sprintf("%.3f", ($result{aggre} / $result{rdays}));
          
          push @$users, \%result;
@@ -187,24 +191,53 @@ sub generate_metrics {
   
    # Total per day counts
    my %totals = (
+         qansw => 0,
+         qpart => 0,
+         qpost => 0,
+         gperd => 0,
+         
          aperd => 0,
-         cperd => 0,
-         gperd => 0
+         qperd => 0,
+         pperd => 0,
+         gperd => 0,
+         
+         answp => 0,
+         partp => 0,
+         postp => 0,
+         aggrp => 0,
+         
+         rdays => 0
       );
 
    # Accrue the total per day counts
    foreach (@$users) {
+      $totals{qansw} += $_->{qansw};
+      $totals{qpart} += $_->{qpart};
+      $totals{qpost} += $_->{qpost};
+      $totals{aggre} += $_->{aggre};
+      
       $totals{aperd} += $_->{aperd};
-      $totals{cperd} += $_->{cperd};
+      $totals{qperd} += $_->{qperd};
+      $totals{pperd} += $_->{pperd};
       $totals{gperd} += $_->{gperd};
+      
+      $totals{rdays} += $_->{rdays};
    }
 
    # Figure out what % a mods per day count is of the total per day
    foreach (@$users) {
       $_->{answp} = sprintf("%.3f", (($_->{aperd} / $totals{aperd}) * 100));
-      $_->{commp} = sprintf("%.3f", (($_->{cperd} / $totals{cperd}) * 100));
+      $_->{partp} = sprintf("%.3f", (($_->{qperd} / $totals{qperd}) * 100));
+      $_->{postp} = sprintf("%.3f", (($_->{pperd} / $totals{pperd}) * 100));
       $_->{aggrp} = sprintf("%.3f", (($_->{gperd} / $totals{gperd}) * 100));
+
+      $totals{answp} += $_->{answp};
+      $totals{partp} += $_->{partp};
+      $totals{postp} += $_->{postp};
+      $totals{aggrp} += $_->{aggrp};
    }
+   
+   return \%totals;
 }
 
 sub print_xml {
@@ -213,6 +246,7 @@ sub print_xml {
 
 sub print_html {
    my $results = shift;
+   my $totals = shift;
    my $users = $results->{user};
 
    # Start html document
@@ -226,41 +260,73 @@ sub print_html {
    print "<tr>\n";
    print "<th>Moderator</th>\n";
    print "<th>Days</th>\n";
+   
    print "<th>Answers</th>\n";
+   print "<th>Questions</th>\n";
    print "<th>Comments</th>\n";
    print "<th>Aggregate</th>\n";
+   
    print "<th>Answers/day</th>\n";
+   print "<th>Questions/day</th>\n";
    print "<th>Comments/day</th>\n";
    print "<th>Aggregate/day</th>\n";
+   
    print "<th>%Answers/day</th>\n";
+   print "<th>%Questions/day</th>\n";
    print "<th>%Comments/day</th>\n";
    print "<th>%Aggregate/day</th>\n";
    print "</tr>\n";
    
    # Print table data
    my @background = (
-      "background-color:white;",
-      "background-color:lightgrey;"
+      "background-color:red;",
+      "background-color:yellow;"
       );
    
    my $idx = 0;
    foreach my $user (@$users) {
       my $style = $background[++$idx % 2];
       print "<tr style='text-align:right; $style'>\n";
-      print "<td>$user->{login}</td>\n";
+      print "<td><a href='$user->{uprof}' target='_blank'>$user->{login}</a></td>\n";
+      
       print "<td>$user->{rdays}</td>\n";
+      
       print "<td>$user->{qansw}</td>\n";
       print "<td>$user->{qpart}</td>\n";
+      print "<td>$user->{qpost}</td>\n";
       print "<td>$user->{aggre}</td>\n";
+      
       print "<td>$user->{aperd}</td>\n";
-      print "<td>$user->{cperd}</td>\n";
+      print "<td>$user->{qperd}</td>\n";
+      print "<td>$user->{pperd}</td>\n";
       print "<td>$user->{gperd}</td>\n";
+      
       print "<td>$user->{answp}</td>\n";
-      print "<td>$user->{commp}</td>\n";
+      print "<td>$user->{partp}</td>\n";
+      print "<td>$user->{postp}</td>\n";
       print "<td>$user->{aggrp}</td>\n";
       print "</tr>\n";
    }
+   print "<tr style='text-align:right; background-color:green;'>\n";
+   print "<td>TOTALS</td>\n";
+   print "<td>$totals->{rdays}</td>\n";
    
+   print "<td>$totals->{qansw}</td>\n";
+   print "<td>$totals->{qpart}</td>\n";
+   print "<td>$totals->{qpost}</td>\n";
+   print "<td>$totals->{aggre}</td>\n";
+   
+   print "<td>$totals->{aperd}</td>\n";
+   print "<td>$totals->{qperd}</td>\n";
+   print "<td>$totals->{pperd}</td>\n";
+   print "<td>$totals->{gperd}</td>\n";
+   
+   print "<td>$totals->{answp}</td>\n";
+   print "<td>$totals->{partp}</td>\n";
+   print "<td>$totals->{postp}</td>\n";
+   print "<td>$totals->{aggrp}</td>\n";
+   print "</tr>\n";
+
    # End html document
    print "</table></body>\n";
    print "</html>\n";
@@ -299,9 +365,9 @@ sub main {
    
    die "Fatal error" unless %results;
    
-   generate_metrics(\%results);
+   my $totals = generate_metrics(\%results);
    
-   $print_results{$format}(\%results);
+   $print_results{$format}(\%results, $totals);
 }
 
 # Entry point
