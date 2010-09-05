@@ -1,0 +1,61 @@
+<html>
+<head><title>My Test Extension Options</title></head>
+<script type="text/javascript">
+
+
+// Saves options to localStorage.
+function save_options() {
+  localStorage["username"] = document.getElementById("username").value;
+  localStorage["password"] = document.getElementById("password").value;
+  localStorage["incognito"] = document.getElementById("incognito").checked;
+  
+  // Update status to let user know options were saved.
+  var status = document.getElementById("status");
+  status.innerHTML = "Saved.";
+  setTimeout(function() {
+    status.innerHTML = "";
+  }, 750);
+}
+
+// Restores select box state to saved value from localStorage.
+function restore_options() {
+	if(localStorage["username"])
+	{
+		document.getElementById("username").value = localStorage["username"];
+		document.getElementById("password").value = localStorage["password"];
+		document.getElementById("incognito").checked = localStorage["incognito"];
+	}
+}
+
+</script>
+
+<body onload="restore_options()">
+
+<table>
+	<tr><td colspan="2">
+		<img src="ee.jpg" />
+	</td><tr>
+	<tr><td>
+		<label for="username">Username: </label>
+	</td><td>
+		<input type="text" id="username">
+	</td></tr>
+	<tr><td>
+		<label for="password">Password: </label>
+	</td><td>
+		<input type="password" id="password">
+	</td></tr>
+	<tr><td>
+		<label for="incognito">Incognito: </label>
+	</td><td>
+		<input type="checkbox" id="incognito">
+	</td></tr>
+	</td><td>
+		<div id="status" style="color:red;"/>
+	</td><td style="text-align:right">
+		<button onclick="save_options()">Save</button>
+	</td></tr>
+</table>
+
+</body>
+</html>
