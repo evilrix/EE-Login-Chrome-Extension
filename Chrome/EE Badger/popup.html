@@ -1,15 +1,53 @@
 <html>
+<head>
+</head>
+<script type="text/javascript"> 
+<!--
+
+function get_qid() {
+	var urlquery = location.href.split("?")
+	var rnurlterms = urlquery[1].split(",")
+	return (rnurlterms.length > 0) ? rnurlterms[0] : "";
+}
+
+function init() {
+	var qids = document.getElementsByName('qid');
+	
+	for(var idx = 0 ; idx < qids.length ; ++idx) {
+		qids[idx].value = get_qid();
+	}
+}
+
+function set(idx)
+{
+	var container = document.getElementById('container');
+	var html = "";
+ 
+	if(idx > 0)
+	{
+		var act = document.getElementById('opt').options[idx].value;
+		html = document.getElementById(act).innerHTML;
+	}
+	
+	container.innerHTML = html
+	
+	init();
+}
+
+-->
+</script>
+
 <body>
 <img src="ee.jpg" />
 <h1>Badger&nbsp;Tools</h1> 
 
 <div id="delete" style="display:none;"> 
 <h2>Automatic Delete</h2> 
-<form action="http://www.experts-exchange.com/admin/xml/startAutoClose.jsp" method="post"> 
+<form action="http://www.experts-exchange.com/admin/xml/startAutoClose.jsp" method="post" name="act"> 
 	<input type="hidden" value="delete" name="action" /> 
 	<table border="0"> 
 		<tr> 
-			<td>Question&nbsp;ID:</td><td colspan="3"><input type="text" name="qid" /> 
+			<td>Question&nbsp;ID:</td><td colspan="3"><input type="text" name="qid"/> 
 		</tr> 
  
 		<tr> 
@@ -188,25 +226,7 @@
  
 </form> 
 </div> 
- 
-<script type="text/javascript"> 
-<!--
-function set(idx)
-{
-	container = document.getElementById('container');
-	html="";
- 
-	if(idx > 0)
-	{
-		act = document.getElementById('opt').options[idx].value;
-		html = document.getElementById(act).innerHTML;
-	}
-	
-	container.innerHTML = html
-}
--->
-</script> 
- 
+  
 <form> 
 	<select id="opt" onchange="set(this.form.opt.selectedIndex);"> 
 		<option>Choose&nbsp;an&nbsp;option</option> 
