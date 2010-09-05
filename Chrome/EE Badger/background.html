@@ -3,13 +3,13 @@
   <script>
 
     chrome.pageAction.onClicked.addListener(function(tab) {
-		var re = /http:\/\/www\.experts-exchange\.com\/.*\/Q_(\d+)[^.].html/;
+		var re = /http:\/\/www\.experts-exchange\.com\/.*\/Q_(\d+)\.html/;
 		var result = re.exec(tab.url);
 		chrome.tabs.create({'url': "popup.html?" + result[1]});
     });
 	
     chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
-		var re = /http:\/\/www\.experts-exchange\.com\/.*\/Q_\d+[^.].html/;
+		var re = /http:\/\/www\.experts-exchange\.com\/.*\/Q_\d+\.html/;
 
 		if(re.test(tab.url)) {
 			chrome.pageAction.show(tabId);
