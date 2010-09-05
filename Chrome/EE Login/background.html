@@ -1,0 +1,31 @@
+<html>
+  <script>
+    chrome.browserAction.onClicked.addListener(function(tab) {
+	
+		if(!localStorage["username"])
+		{
+			alert("You need to configure your EE username and password.");
+			chrome.tabs.create({'url': "options.html"});
+			return;
+		}
+		
+		var url = "https://secure.experts-exchange.com/login.jsp?msuLoginName=" + localStorage["username"] + "&msuPassword=" + localStorage["password"] + "&msuLoginSubmit=1";
+		
+		if(localStorage["incognito"] == "true")
+		{
+			chrome.windows.create({
+				'url': url,
+				'incognito': true,
+				'left': 0,
+				'top': 0
+			});
+		}
+		else
+		{
+			chrome.tabs.create({'url': url});
+		}
+		
+    });
+  </script>
+</html>
+
