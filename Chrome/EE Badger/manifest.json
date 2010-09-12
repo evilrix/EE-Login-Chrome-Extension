@@ -1,6 +1,6 @@
 {
 	"name": "EE Badger",
-	"version": "1.0.0.5",
+	"version": "1.0.0.7",
 	"description": "Quick access to Badger tools.",
 	"background_page": "background.html",
 	"page_action": {
