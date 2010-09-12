@@ -1,6 +1,6 @@
 <html>
   <script>
-    chrome.browserAction.onClicked.addListener(function(tab) {
+    chrome.pageAction.onClicked.addListener(function(tab) {
 	
 		if(!localStorage["username"])
 		{
@@ -9,7 +9,7 @@
 			return;
 		}
 		
-		var url = "https://secure.experts-exchange.com/login.jsp?msuLoginName=" + localStorage["username"] + "&msuPassword=" + localStorage["password"] + "&msuLoginSubmit=1";
+		var url = "https://secure.experts-exchange.com/login.jsp?msuLoginName=" + localStorage["username"] + "&msuPassword=" + localStorage["password"] + "&msuLoginSubmit=1&redirectURL=" + tab.url
 		
 		if(localStorage["incognito"] == "true")
 		{
@@ -26,6 +26,14 @@
 		}
 		
     });
+	
+    chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
+		var re = /^http:\/\/www\.experts-exchange\.com\//;
+
+		if(re.test(tab.url)) {
+			chrome.pageAction.show(tabId);
+		}
+    });	
   </script>
 </html>
 
