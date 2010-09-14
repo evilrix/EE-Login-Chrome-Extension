@@ -8,6 +8,14 @@ function save_options() {
   localStorage["username"] = document.getElementById("username").value;
   localStorage["password"] = document.getElementById("password").value;
   localStorage["incognito"] = document.getElementById("incognito").checked;
+  localStorage["detach"] = document.getElementById("detach").checked;
+  
+  localStorage["md"] = document.getElementById("md").checked;
+  localStorage["za"] = document.getElementById("za").checked;
+  localStorage["pe"] = document.getElementById("pe").checked;
+  localStorage["cv"] = document.getElementById("cv").checked;
+  localStorage["pd"] = document.getElementById("pd").checked;
+  localStorage["cs"] = document.getElementById("cs").checked;
   
   // Update status to let user know options were saved.
   var status = document.getElementById("status");
@@ -23,37 +31,123 @@ function restore_options() {
 	{
 		document.getElementById("username").value = localStorage["username"];
 		document.getElementById("password").value = localStorage["password"];
-		document.getElementById("incognito").checked = localStorage["incognito"];
+		document.getElementById("incognito").checked = true; //(localStorage["incognito"] == "true");
+		document.getElementById("detach").checked = (localStorage["detach"] == "true");
+
+		document.getElementById("md").checked = (localStorage["md"] == "true");
+		document.getElementById("za").checked = (localStorage["za"] == "true");
+		document.getElementById("pe").checked = (localStorage["pe"] == "true");
+		document.getElementById("cv").checked = (localStorage["cv"] == "true");
+		document.getElementById("pd").checked = (localStorage["pd"] == "true");
+		document.getElementById("cs").checked = (localStorage["cs"] == "true");
 	}
 }
 
 </script>
 
+<style type="text/css">
+span.zones {
+	color:gray;
+	font-style:italic;
+}
+label.zones {
+	padding-left: 15px;
+}
+</style>
+
 <body onload="restore_options()">
 
-<table>
+<table style="width: 320px;">
 	<tr><td colspan="2">
-		<img src="ee.jpg" />
-	</td><tr>
+		<a href="http://www.experts-exchange.com/" target="_blank"><img src="ee.jpg" style="width: 100%;" alt="Experts Exchange" title="Experts Exchange"/></a>
+	</td></tr>
+
 	<tr><td>
 		<label for="username">Username: </label>
 	</td><td>
-		<input type="text" id="username">
+		<input type="text" id="username" style="width: 75%;" title="Your username goes here.">
 	</td></tr>
+	
 	<tr><td>
 		<label for="password">Password: </label>
 	</td><td>
-		<input type="password" id="password">
+		<input type="password" id="password" style="width: 75%;" title="The password goes here.">
 	</td></tr>
+
 	<tr><td>
 		<label for="incognito">Incognito: </label>
 	</td><td>
-		<input type="checkbox" id="incognito">
+		<input type="checkbox" id="incognito" checked="true" disabled="true" title="The login is always via an incognito window.">
 	</td></tr>
+
+	<tr><td colspan="2">
+	<br>
+	</td></tr>
+
+	<tr><td>
+		<label for="detach">Detach auto-login tab: </label>
 	</td><td>
+		<input type="checkbox" id="detach" title="If set the tab will automatically detach from the main window rather than a copy being created.">
+	</td></tr>
+	
+	<tr><td colspan="2">
+	<br>
+	</td></tr>
+
+	<tr><td colspan=2>
+		<table style="border: 0px dotted lightgray;width: 100%;">
+			<tr><td colspan=4 >
+				<span class="zones" title="Select the zones will automatically open a new window and login.">
+					Enable&nbsp;auto-login&nbsp;for&nbsp;the&nbsp;following&nbsp;zones:
+				</span>
+			</td></tr>
+			
+			<tr><td>
+				<label class="zones" for="md">Mods&nbsp;Only: </label>
+			</td><td>
+				<input type="checkbox" id="md" title="Open a new window and login to the Mods Only zone.">
+			</td><td>
+				<label class="zones" for="za">ZAs&nbsp;Only: </label>
+			</td><td>
+				<input type="checkbox" id="za" title="Open a new window and login to the ZA Only zone.">
+			</td></tr>
+			
+			<tr><td>
+				<label class="zones" for="pe">PEs&nbsp;Only: </label>
+			</td><td>
+				<input type="checkbox" id="pe" title="Open a new window and login to the PE Only zone.">
+			</td><td>
+				<label class="zones" for="cv">CVs&nbsp;Only: </label>
+			</td><td>
+				<input type="checkbox" id="cv" title="Open a new window and login to the private CV zones.">
+			</td></tr>
+			
+			<tr><td>
+				<label class="zones" for="pd">PD Zone: </label>
+			</td><td>
+				<input type="checkbox" id="pd" title="Open a new window and login to the Private Discussions zone.">
+			</td><td>
+				<label class="zones" for="cs">CS&nbsp;Other: </label>
+			</td><td>
+				<input type="checkbox" id="cs" title="Open a new window and login to the private CS zones.">
+			</td></tr>
+
+			<tr><td>
+			</td><td>
+			</td><td>
+			</td><td>
+			</td></tr>
+		</table>
+	</td></tr>
+	
+	<tr><td colspan="2">
+	<br>
+	</td></tr>
+
+	<tr><td>
 		<div id="status" style="color:red;"/>
 	</td><td style="text-align:right">
-		<button onclick="save_options()">Save</button>
+		<button onclick="save_options()" title="Save settings.">Save</button>
 	</td></tr>
 </table>
 
