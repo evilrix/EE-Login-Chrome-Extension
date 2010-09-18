@@ -1,0 +1,43 @@
+<html>
+<head><title>Gib</title></head>
+<script type="text/javascript">
+
+
+// Saves options to localStorage.
+
+function save_options()
+{
+	localStorage["automatic"] = document.getElementById("automatic").checked;
+
+	// Update status to let user know options were saved.
+	var status = document.getElementById("status");
+	status.innerHTML = "Saving...";
+	setTimeout(function() {
+	status.innerHTML = "";
+	}, 750);
+}
+
+// Restores select box state to saved value from localStorage.
+function restore_options() {
+	document.getElementById("automatic").checked = localStorage["automatic"] == "true";
+}
+
+</script>
+
+<body onload="restore_options()">
+
+<table border=0>
+			
+	<tr><td>
+		<img src="icon.png" style="width:32px;height:32px;"/>
+	</td><td>
+		<label for="detonman"><span class="zones" style="font-size:16">
+			Automatically&nbsp;revert&nbsp;to&nbsp;Google&nbsp;Images&nbsp;Basic?
+		</span></label>		
+	</td><td>
+		<input type="checkbox" id="automatic" onclick="save_options()" />			
+	</td></tr>
+</table>
+
+</body>
+</html>
