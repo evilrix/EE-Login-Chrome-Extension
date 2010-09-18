@@ -4,25 +4,62 @@
 
 
 // Saves options to localStorage.
+function save_radio(name) {
+	var rds = document.getElementsByName(name);
+	var res = 0;
+	
+	for(var i = 0 ; i < rds.length ; ++i) {
+		if(rds[i].checked) {
+			res = i;
+		}
+	}
+	
+	localStorage[name] = res;
+}
+
+function load_radio(name) {
+	var rds = document.getElementsByName(name);
+	var res = 0;
+	
+	if(localStorage[name] == "true")
+	{
+		// Handle old version save format. Remove in next version!
+		for(var i = 0 ; i < rds.length ; ++i) {
+			rds[i].checked = false;
+		}
+		
+		if(localStorage["detach"] == "true") {
+			rds[2].checked = true;
+		} else {
+			rds[1].checked = true;
+		}
+		
+	} else {
+	
+		for(var i = 0 ; i < rds.length ; ++i) {
+			rds[i].checked = (i == localStorage[name]);
+		}
+		
+	}
+}
+
 function save_options() {
-  localStorage["username"] = document.getElementById("username").value;
-  localStorage["password"] = document.getElementById("password").value;
-  localStorage["incognito"] = document.getElementById("incognito").checked;
-  localStorage["detach"] = document.getElementById("detach").checked;
-  
-  localStorage["md"] = document.getElementById("md").checked;
-  localStorage["za"] = document.getElementById("za").checked;
-  localStorage["pe"] = document.getElementById("pe").checked;
-  localStorage["cv"] = document.getElementById("cv").checked;
-  localStorage["pd"] = document.getElementById("pd").checked;
-  localStorage["cs"] = document.getElementById("cs").checked;
-  
-  // Update status to let user know options were saved.
-  var status = document.getElementById("status");
-  status.innerHTML = "Saved.";
-  setTimeout(function() {
-    status.innerHTML = "";
-  }, 750);
+	localStorage["username"] = document.getElementById("username").value;
+	localStorage["password"] = document.getElementById("password").value;
+
+	save_radio("md");
+	save_radio("za");
+	save_radio("pe");
+	save_radio("cv");
+	save_radio("pd");
+	save_radio("cs");
+
+	// Update status to let user know options were saved.
+	var status = document.getElementById("status");
+	status.innerHTML = "Saving...";
+	setTimeout(function() {
+	status.innerHTML = "";
+	}, 750);
 }
 
 // Restores select box state to saved value from localStorage.
@@ -31,15 +68,13 @@ function restore_options() {
 	{
 		document.getElementById("username").value = localStorage["username"];
 		document.getElementById("password").value = localStorage["password"];
-		document.getElementById("incognito").checked = true; //(localStorage["incognito"] == "true");
-		document.getElementById("detach").checked = (localStorage["detach"] == "true");
 
-		document.getElementById("md").checked = (localStorage["md"] == "true");
-		document.getElementById("za").checked = (localStorage["za"] == "true");
-		document.getElementById("pe").checked = (localStorage["pe"] == "true");
-		document.getElementById("cv").checked = (localStorage["cv"] == "true");
-		document.getElementById("pd").checked = (localStorage["pd"] == "true");
-		document.getElementById("cs").checked = (localStorage["cs"] == "true");
+		load_radio("md");
+		load_radio("za");
+		load_radio("pe");
+		load_radio("cv");
+		load_radio("pd");
+		load_radio("cs");
 	}
 }
 
@@ -47,11 +82,41 @@ function restore_options() {
 
 <style type="text/css">
 span.zones {
+	padding-left: 5px;
 	color:gray;
 	font-style:italic;
 }
+
 label.zones {
 	padding-left: 15px;
+}
+
+th.zones {
+	text-align: center;
+	width: 25%;
+	font-size: 12;
+	border: 0px dotted lightgray;
+}
+
+td.zones {
+	text-align: center;
+	width: 25%;
+	font-size: 12;
+	border: 0px dotted lightgray;
+}
+
+th.hzones {
+	text-align: center;
+	width: 25%;
+	font-size: 12;
+	border: 0px dotted lightgray;
+}
+
+td.hzones {
+	text-align: right;
+	width: 25%;
+	font-size: 12;
+	border: 0px dotted lightgray;
 }
 </style>
 
@@ -84,59 +149,90 @@ label.zones {
 	<br>
 	</td></tr>
 
-	<tr><td>
-		<label for="detach">Detach auto-login tab: </label>
-	</td><td>
-		<input type="checkbox" id="detach" title="If set the tab will automatically detach from the main window rather than a copy being created.">
-	</td></tr>
-	
-	<tr><td colspan="2">
-	<br>
-	</td></tr>
-
 	<tr><td colspan=2>
-		<table style="border: 0px dotted lightgray;width: 100%;">
+		<table style="border: 1px dotted lightgray;width: 100%;">
 			<tr><td colspan=4 >
-				<span class="zones" title="Select the zones will automatically open a new window and login.">
-					Enable&nbsp;auto-login&nbsp;for&nbsp;the&nbsp;following&nbsp;zones:
-				</span>
-			</td></tr>
-			
-			<tr><td>
-				<label class="zones" for="md">Mods&nbsp;Only: </label>
-			</td><td>
-				<input type="checkbox" id="md" title="Open a new window and login to the Mods Only zone.">
-			</td><td>
-				<label class="zones" for="za">ZAs&nbsp;Only: </label>
-			</td><td>
-				<input type="checkbox" id="za" title="Open a new window and login to the ZA Only zone.">
-			</td></tr>
-			
-			<tr><td>
-				<label class="zones" for="pe">PEs&nbsp;Only: </label>
-			</td><td>
-				<input type="checkbox" id="pe" title="Open a new window and login to the PE Only zone.">
-			</td><td>
-				<label class="zones" for="cv">CVs&nbsp;Only: </label>
-			</td><td>
-				<input type="checkbox" id="cv" title="Open a new window and login to the private CV zones.">
-			</td></tr>
-			
-			<tr><td>
-				<label class="zones" for="pd">PD Zone: </label>
-			</td><td>
-				<input type="checkbox" id="pd" title="Open a new window and login to the Private Discussions zone.">
-			</td><td>
-				<label class="zones" for="cs">CS&nbsp;Other: </label>
-			</td><td>
-				<input type="checkbox" id="cs" title="Open a new window and login to the private CS zones.">
 			</td></tr>
 
-			<tr><td>
-			</td><td>
-			</td><td>
-			</td><td>
+			<tr><td colspan=4 >
 			</td></tr>
+
+			<tr><th class="hzones">
+				<span class="zones" title="Select the zones will automatically open a new window and login.">
+					Auto-login:
+				</span>
+			</th><th class="zones">
+				Disabled
+			</th><th class="zones">
+				Docked
+			</th><th class="zones">
+				Detached
+			</th></tr>
+
+			<tr><td colspan=4 >
+				<hr>
+			</td></tr>
+
+			<tr><td class="hzones">
+				<label class="zones" for="md">Mods&nbsp;Only: </label>
+			</td><td class="zones">
+				<input type="radio" name="md" value="false" />
+			</td><td class="zones">
+				<input type="radio" name="md" value="true" />
+			</td><td class="zones">
+				<input type="radio" name="md" value="detach" />
+			</th></tr>
+			
+			<tr><td class="hzones">
+				<label class="zones" for="za">ZAs&nbsp;Only: </label>
+			</td><td class="zones">
+				<input type="radio" name="za" value="false" />
+			</td><td class="zones">
+				<input type="radio" name="za" value="true" />
+			</td><td class="zones">
+				<input type="radio" name="za" value="detach" />
+			</th></tr>
+
+			<tr><td class="hzones">
+				<label class="zones" for="pe">PEs&nbsp;Only: </label>
+			</td><td class="zones">
+				<input type="radio" name="pe" value="false" />
+			</td><td class="zones">
+				<input type="radio" name="pe" value="true" />
+			</td><td class="zones">
+				<input type="radio" name="pe" value="detach" />
+			</th></tr>
+
+			<tr><td class="hzones">
+				<label class="zones" for="cv">CVs&nbsp;Only: </label>
+			</td><td class="zones">
+				<input type="radio" name="cv" value="false" />
+			</td><td class="zones">
+				<input type="radio" name="cv" value="true" />
+			</td><td class="zones">
+				<input type="radio" name="cv" value="detach" />
+			</th></tr>
+
+			<tr><td class="hzones">
+				<label class="zones" for="pd">PD&nbsp;Zone: </label>
+			</td><td class="zones">
+				<input type="radio" name="pd" value="false" />
+			</td><td class="zones">
+				<input type="radio" name="pd" value="true" />
+			</td><td class="zones">
+				<input type="radio" name="pd" value="detach" />
+			</th></tr>
+
+			<tr><td class="hzones">
+				<label class="zones" for="cs">CS&nbsp;Other: </label>
+			</td><td class="zones">
+				<input type="radio" name="cs" value="false" />
+			</td><td class="zones">
+				<input type="radio" name="cs" value="true" />
+			</td><td class="zones">
+				<input type="radio" name="cs" value="detach" />
+			</th></tr>
+
 		</table>
 	</td></tr>
 	

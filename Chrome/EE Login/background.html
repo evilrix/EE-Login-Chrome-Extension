@@ -14,67 +14,61 @@
 		url += "&msuPassword=" + localStorage["password"];
 		url += "&msuLoginSubmit=1&redirectURL=" + tab.url;
 
-		if(localStorage["incognito"] == "true")
+		if(detach)
 		{
-			if(detach)
-			{
-				chrome.tabs.remove(tab.id);
-			}
+			chrome.tabs.remove(tab.id);
+		}
 
-			chrome.windows.create({
-				'url': url,
-				'incognito': true
-			});			
-		}
-		else
-		{
-			if(detach)
-			{
-				chrome.tabs.update({'url': url});
-			}
-			else
-			{
-				chrome.tabs.create({'url': url});
-			}
-		}
+		chrome.windows.create({
+			'url': url,
+			'incognito': true
+		});			
 		
     }
 
     chrome.pageAction.onClicked.addListener(handler);
 	
-    chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
+	var re = {
+		'gn': /^http:\/\/www\.experts-exchange\.com\//,
+		'md': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/(?:Admin_Only|Mods_Only)\//,
+		'za': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/Admin_Mod_ZA_Only\//,
+		'pe': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/Admin_Mod_PE_Only\//,
+		'pd': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/Private_Discussions\//,
+		'cv': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/CV_Admin\//,
+		'cs': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/(?!Admin_Only|Mods_Only|Admin_Mod_ZA_Only|Admin_Mod_PE_Only|Private_Discussions|CV_Admin)\//
+	};
+	
+	function zone_handler(name, tab) {
+		var ret = false
 		
-		if(changeInfo.status == "loading") {
+		if(localStorage[name] > 0 && re[name].test(tab.url))
+		{
+			handler(tab, (localStorage[name] == 2));
+			ret = true;
+		}
+		
+		return ret;
+	}
+	
+    chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
+
+	if(changeInfo.status == "loading") {
 			if(tab.incognito)	{
 			
 				alert("EE Login doesn't work in incognito mode, please disable it!");
 				
-			} else 	{
+			} else {
 			
-				var reGn = /^http:\/\/www\.experts-exchange\.com\//;
-				
-				if(reGn.test(tab.url)) {
+				if(re['gn'].test(tab.url)) {
 				
 					chrome.pageAction.show(tabId);
 					
-					var reMd = /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/(?:Admin_Only|Mods_Only)\//;
-					var reZa = /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/Admin_Mod_ZA_Only\//;
-					var rePe = /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/Admin_Mod_PE_Only\//;
-					var rePd = /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/Private_Discussions\//;
-					var reCv = /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/CV_Admin\//;
-					var reCs = /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/(?!Admin_Only|Mods_Only|Admin_Mod_ZA_Only|Admin_Mod_PE_Only|Private_Discussions|CV_Admin)/;
-					
-					if(
-						(localStorage["md"] == "true" && reMd.test(tab.url)) ||
-						(localStorage["za"] == "true" && reZa.test(tab.url)) ||
-						(localStorage["pe"] == "true" && rePe.test(tab.url)) ||
-						(localStorage["pd"] == "true" && rePd.test(tab.url)) ||
-						(localStorage["cv"] == "true" && reCv.test(tab.url)) ||
-						(localStorage["cs"] == "true" && reCs.test(tab.url))
-						)
-					{
-						handler(tab, (localStorage["detach"] == "true"));
-					}
+					zone_handler('md', tab) ||
+					zone_handler('za', tab) ||
+					zone_handler('pe', tab) ||
+					zone_handler('pd', tab) ||
+					zone_handler('cv', tab) ||
+					zone_handler('cs', tab);
 				}
 			}
 		}
