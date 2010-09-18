@@ -1,7 +1,17 @@
 <html>
   <script>
-	function handler(tab, detach) {
-	
+	var re = {
+		'ee': /^http:\/\/www\.experts-exchange\.com\//,
+		'md': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/(?:Admin_Only|Mods_Only)\//,
+		'za': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/Admin_Mod_ZA_Only\//,
+		'pe': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/(?:PE_Adm|Admin_Mod_PE_Only)\//,
+		'pd': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/Private_Discussions\//,
+		'cv': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/CV_Admin\//,
+		'cs': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/(?!Admin_Only|Mods_Only|Admin_Mod_ZA_Only|Admin_Mod_PE_Only|Private_Discussions|CV_Admin)\//
+	};
+		
+	function handle_login(tab, detach)
+	{
 		if(!localStorage["username"])
 		{
 			alert("You need to configure your EE username and password.");
@@ -22,44 +32,31 @@
 		chrome.windows.create({
 			'url': url,
 			'incognito': true
-		});			
-		
-    }
-
-    chrome.pageAction.onClicked.addListener(handler);
-	
-	var re = {
-		'gn': /^http:\/\/www\.experts-exchange\.com\//,
-		'md': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/(?:Admin_Only|Mods_Only)\//,
-		'za': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/Admin_Mod_ZA_Only\//,
-		'pe': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/Admin_Mod_PE_Only\//,
-		'pd': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/Private_Discussions\//,
-		'cv': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/CV_Admin\//,
-		'cs': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/(?!Admin_Only|Mods_Only|Admin_Mod_ZA_Only|Admin_Mod_PE_Only|Private_Discussions|CV_Admin)\//
-	};
+		});				
+	}
 	
 	function zone_handler(name, tab) {
 		var ret = false
 		
 		if(localStorage[name] > 0 && re[name].test(tab.url))
 		{
-			handler(tab, (localStorage[name] == 2));
+			handle_login(tab, (localStorage[name] == 2));
 			ret = true;
 		}
 		
 		return ret;
 	}
-	
-    chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
 
-	if(changeInfo.status == "loading") {
+	function onUpdate_handler(tabId, changeInfo, tab) {
+
+		if(changeInfo.status == "loading") {
 			if(tab.incognito)	{
 			
 				alert("EE Login doesn't work in incognito mode, please disable it!");
 				
 			} else {
 			
-				if(re['gn'].test(tab.url)) {
+				if(re['ee'].test(tab.url)) {
 				
 					chrome.pageAction.show(tabId);
 					
@@ -72,7 +69,16 @@
 				}
 			}
 		}
-    });	
-  </script>
+	}
+	
+	function onClick_handler(tab) {
+	
+		handle_login(tab, localStorage["detonman"] == "true");
+    }
+		
+    chrome.tabs.onUpdated.addListener(onUpdate_handler);	
+    chrome.pageAction.onClicked.addListener(onClick_handler);
+
+	</script>
 </html>
 

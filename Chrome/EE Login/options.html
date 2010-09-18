@@ -20,46 +20,64 @@ function save_radio(name) {
 function load_radio(name) {
 	var rds = document.getElementsByName(name);
 	var res = 0;
-	
-	if(localStorage[name] == "true")
+
+	if(localStorage["username"])
 	{
-		// Handle old version save format. Remove in next version!
-		for(var i = 0 ; i < rds.length ; ++i) {
-			rds[i].checked = false;
+		if(localStorage[name] == "true")
+		{
+			if(localStorage["detach"] == "true") {
+				rds[1].checked = false;
+				rds[2].checked = true;
+			} else {
+				rds[1].checked = true;
+				rds[2].checked = false;
+			}
+			rds[3].checked = false;
+			
 		}
-		
-		if(localStorage["detach"] == "true") {
-			rds[2].checked = true;
-		} else {
-			rds[1].checked = true;
+		else
+		{
+			for(var i = 0 ; i < rds.length ; ++i) {
+				rds[i].checked = (i == localStorage[name]);
+			}
 		}
-		
-	} else {
-	
-		for(var i = 0 ; i < rds.length ; ++i) {
-			rds[i].checked = (i == localStorage[name]);
-		}
-		
+	}
+	else
+	{
+		rds[0].checked = true;
 	}
 }
 
 function save_options() {
-	localStorage["username"] = document.getElementById("username").value;
-	localStorage["password"] = document.getElementById("password").value;
 
-	save_radio("md");
-	save_radio("za");
-	save_radio("pe");
-	save_radio("cv");
-	save_radio("pd");
-	save_radio("cs");
+	var username = document.getElementById("username").value;
+	var password = document.getElementById("password").value;
 
-	// Update status to let user know options were saved.
-	var status = document.getElementById("status");
-	status.innerHTML = "Saving...";
-	setTimeout(function() {
-	status.innerHTML = "";
-	}, 750);
+	if(!username || !password)
+	{
+		alert("You must set a username and password!");
+	}
+	else
+	{
+		localStorage["username"] = username;
+		localStorage["password"] = password;
+
+		save_radio("md");
+		save_radio("za");
+		save_radio("pe");
+		save_radio("cv");
+		save_radio("pd");
+		save_radio("cs");
+
+		localStorage["detonman"] = document.getElementById("detonman").checked;
+
+		// Update status to let user know options were saved.
+		var status = document.getElementById("status");
+		status.innerHTML = "Saving...";
+		setTimeout(function() {
+		status.innerHTML = "";
+		}, 750);
+	}
 }
 
 // Restores select box state to saved value from localStorage.
@@ -69,18 +87,25 @@ function restore_options() {
 		document.getElementById("username").value = localStorage["username"];
 		document.getElementById("password").value = localStorage["password"];
 
-		load_radio("md");
-		load_radio("za");
-		load_radio("pe");
-		load_radio("cv");
-		load_radio("pd");
-		load_radio("cs");
+		
+		document.getElementById("detonman").checked = localStorage["detonman"] == "true";
 	}
+	
+	load_radio("md");
+	load_radio("za");
+	load_radio("pe");
+	load_radio("cv");
+	load_radio("pd");
+	load_radio("cs");
 }
 
 </script>
 
 <style type="text/css">
+label.login {
+	padding-left: 15px;
+}
+
 span.zones {
 	padding-left: 5px;
 	color:gray;
@@ -118,6 +143,7 @@ td.hzones {
 	font-size: 12;
 	border: 0px dotted lightgray;
 }
+
 </style>
 
 <body onload="restore_options()">
@@ -233,8 +259,19 @@ td.hzones {
 				<input type="radio" name="cs" value="detach" />
 			</th></tr>
 
+			<tr><td colspan="4">
+			<hr>
+			</td></tr>
+			
+			<tr><td colspan=4 style="text-align:right;padding-right:15px;">
+				<label for="detonman"><span class="zones">
+					Detach&nbsp;on&nbsp;manual login:&nbsp
+				</span></label>		
+				<input type="checkbox" id="detonman" value="detach" />			
+			</td></tr>
 		</table>
 	</td></tr>
+
 	
 	<tr><td colspan="2">
 	<br>
