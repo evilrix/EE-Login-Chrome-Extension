@@ -1,6 +1,6 @@
 {
 	"name": "Google Images Basic",
-	"version": "1.0.0.2",
+	"version": "1.0.0.4",
 	"description": "Google Images Basic",
 	"background_page": "background.html",
 	"page_action": {
