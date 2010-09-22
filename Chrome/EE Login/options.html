@@ -23,23 +23,8 @@ function load_radio(name) {
 
 	if(localStorage["username"])
 	{
-		if(localStorage[name] == "true")
-		{
-			if(localStorage["detach"] == "true") {
-				rds[1].checked = false;
-				rds[2].checked = true;
-			} else {
-				rds[1].checked = true;
-				rds[2].checked = false;
-			}
-			rds[3].checked = false;
-			
-		}
-		else
-		{
-			for(var i = 0 ; i < rds.length ; ++i) {
-				rds[i].checked = (i == localStorage[name]);
-			}
+		for(var i = 0 ; i < rds.length ; ++i) {
+			rds[i].checked = (i == localStorage[name]);
 		}
 	}
 	else
@@ -144,6 +129,13 @@ td.hzones {
 	border: 0px dotted lightgray;
 }
 
+td.help {
+	padding-left: 5px;
+	color:gray;
+	font-style:italic;
+}
+
+
 </style>
 
 <body onload="restore_options()">
@@ -188,11 +180,11 @@ td.hzones {
 					Auto-login:
 				</span>
 			</th><th class="zones">
-				Disabled
+				Disable
 			</th><th class="zones">
-				Docked
+				Clone
 			</th><th class="zones">
-				Detached
+				Detach
 			</th></tr>
 
 			<tr><td colspan=4 >
@@ -265,13 +257,12 @@ td.hzones {
 			
 			<tr><td colspan=4 style="text-align:right;padding-right:15px;">
 				<label for="detonman"><span class="zones">
-					Detach&nbsp;on&nbsp;manual login:&nbsp
+					Detach&nbsp;on&nbsp;manual login:&nbsp;
 				</span></label>		
 				<input type="checkbox" id="detonman" />			
 			</td></tr>
 		</table>
 	</td></tr>
-
 	
 	<tr><td colspan="2">
 	<br>
@@ -282,7 +273,8 @@ td.hzones {
 	</td><td style="text-align:right">
 		<button onclick="save_options()" title="Save settings.">Save</button>
 	</td></tr>
-</table>
+	
+	</table>
 
 </body>
 </html>
