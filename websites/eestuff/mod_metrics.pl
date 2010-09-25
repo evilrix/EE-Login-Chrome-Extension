@@ -92,7 +92,7 @@ sub authenticate {
       my $content = $res->content;
       if($error = $content =~ /Invalid Username\/Email and Password combination/) {
          lock $output_mutex;
-         print "AUTHENTICALTION FAILURE\n";
+         print "AUTHENTICATION FAILURE\n";
          return undef;
       }
    }
