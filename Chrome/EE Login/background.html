@@ -7,6 +7,7 @@
 		'pe': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/(?:PE_Adm|Admin_Mod_PE_Only)\//,
 		'pd': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/Private_Discussions\//,
 		'cv': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/CV_Admin\//,
+		'cg': /^http:\/\/www.experts-exchange.com\/Community_Support\/General\//,
 		'cs': /^http:\/\/www.experts-exchange.com\/Community_Support\/Hidden\/(?!Admin_Only|Mods_Only|Admin_Mod_ZA_Only|Admin_Mod_PE_Only|Private_Discussions|CV_Admin)\//
 	};
 		
@@ -65,6 +66,7 @@
 					zone_handler('pe', tab) ||
 					zone_handler('pd', tab) ||
 					zone_handler('cv', tab) ||
+					zone_handler('cg', tab) ||
 					zone_handler('cs', tab);
 				}
 			}
