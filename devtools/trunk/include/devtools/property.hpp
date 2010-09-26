@@ -11,7 +11,7 @@ protected:
 };
 
 #define property_(TYPE, NAME, IMPL) \
-class NAME ## _ : public Property<TYPE> \
+	class NAME ## _ : public Property<TYPE> \
 	{ \
 	public: \
 		NAME ## _ () {} \
