@@ -1,28 +1,35 @@
-#define property_(TYPE, NAME, IMPL) \
-	class NAME ## __ \
-	{ \
+#define property_(TYPE, OWNER, NAME, IMPL) \
+	private: \
+		class NAME ## __ \
+		{ \
+		friend class OWNER; \
+		public: \
+		  typedef NAME ## __ this_type; \
+   		typedef TYPE valuetype; \
+			NAME ## __ () {} \
+			explicit NAME ## __ (valuetype const & value) \
+				: NAME ## (value) {} \
+			IMPL \
+	   private: \
+		   valuetype NAME ##; \
+		}; \
 	public: \
-      typedef NAME ## __ this_type; \
-   	typedef TYPE value_type; \
-		NAME ## __ () {} \
-		explicit NAME ## __ (value_type const & value_) \
-			: NAME ## _(value_) {} \
-		IMPL \
-   private: \
-	   value_type NAME ## _; \
-	} NAME
+		NAME ## __ NAME;
 
 #define get_ \
-	operator value_type const & () const \
+	operator valuetype const & () const \
 	{ \
 		return get(); \
 	} \
-	value_type const & get() const
+	valuetype const & get() const
 
 #define set_ \
-	this_type & operator = (value_type const & value_) \
+	this_type & operator = (valuetype const & value) \
 	{ \
-		set(value_); \
+		set(value); \
 		return *this; \
 	} \
-	void set(value_type const & value_)
+	void set(valuetype const & value)
+
+#define xprop_(NAME) \
+	NAME ## . ## NAME
