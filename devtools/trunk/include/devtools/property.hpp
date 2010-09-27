@@ -1,23 +1,15 @@
-template <typename T>
-class Property
-{
-public:
-	typedef T value_type;	
-	Property() {}
-	Property(value_type const & value) : value_(value) {}
-		
-protected:
-	value_type value_;
-};
-
 #define property_(TYPE, NAME, IMPL) \
-	class NAME ## _ : public Property<TYPE> \
+	class NAME ## __ \
 	{ \
 	public: \
-		NAME ## _ () {} \
-		explicit NAME ## _ (value_type const & value) \
-			: Property<TYPE>(value) {} \
+      typedef NAME ## __ this_type; \
+   	typedef TYPE value_type; \
+		NAME ## __ () {} \
+		explicit NAME ## __ (value_type const & value_) \
+			: NAME ## _(value_) {} \
 		IMPL \
+   private: \
+	   value_type NAME ## _; \
 	} NAME
 
 #define get_ \
@@ -28,9 +20,9 @@ protected:
 	value_type const & get() const
 
 #define set_ \
-	Property<value_type> & operator = (value_type const & value) \
+	this_type & operator = (value_type const & value_) \
 	{ \
-		set(value); \
+		set(value_); \
 		return *this; \
 	} \
-	void set(value_type const & value)
+	void set(value_type const & value_)
