@@ -1,8 +1,8 @@
-#define property_(TYPE, OWNER, NAME, IMPL) \
+#define property_(TYPE, OWNR, NAME, IMPL) \
 	private: \
 		class NAME ## __ \
 		{ \
-		friend class OWNER; \
+		friend class OWNR; \
 		public: \
 		  typedef NAME ## __ this_type; \
    		typedef TYPE valuetype; \
