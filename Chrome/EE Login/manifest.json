@@ -1,6 +1,6 @@
 {
 	"name": "EE Login",
-	"version": "1.0.0.13",
+	"version": "1.0.0.14",
 	"description": "Logs you into your Experts Exchange account, using the incognito window.",
 	"background_page": "background.html",
 	"page_action": {
