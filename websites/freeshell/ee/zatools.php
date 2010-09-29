@@ -183,12 +183,12 @@ by <a target="_blank" style="text-decoration:none;color:black;" href="http://www
 <!--
 function set(idx)
 {
-	container = document.getElementById('container');
-	html="";
+	var container = document.getElementById('container');
+	var html="";
 
 	if(idx > 0)
 	{
-		act = document.getElementById('opt').options[idx].value;
+		var act = document.getElementById('opt').options[idx].value;
 		html = document.getElementById(act).innerHTML;
 	}
 	
