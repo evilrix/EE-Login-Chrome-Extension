@@ -8,8 +8,34 @@
 		'pd': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/Hidden\/Private_Discussions\//,
 		'cv': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/Hidden\/CV_Admin\//,
 		'cg': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/General\//,
-		'cs': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/Hidden\/(?!Admin_Only|Mods_Only|Admin_Mod_ZA_Only|Admin_Mod_PE_Only|Private_Discussions|CV_Admin)\//
+		'cs': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/Hidden\/(?!Admin_Only|Mods_Only|Admin_Mod_ZA_Only|Admin_Mod_PE_Only|Private_Discussions|CV_Admin)\//,
+		'es': /^http:\/\/(?:[^.]+\.)?ee-stuff\.com\/?/
+		
 	};
+	
+	function get_redirect_url(tab)
+	{
+		var url;
+		
+		if(re['ee'].test(tab.url))
+		{
+			url = "https://secure.experts-exchange.com/login.jsp";
+		}
+		else
+		if(re['es'].test(tab.url))
+		{
+			url = " http://ee-stuff.com/login.php";
+		}
+
+		if(url)
+		{
+			url += "?msuLoginName=" + localStorage["username"];
+			url += "&msuPassword=" + localStorage["password"];
+			url += "&msuLoginSubmit=1&redirectURL=" + tab.url;
+		}
+		
+		return url;
+	}
 		
 	function handle_login(tab, detach)
 	{
@@ -19,21 +45,21 @@
 			chrome.tabs.create({'url': "options.html"});
 			return;
 		}
+
+		var url = get_redirect_url(tab);
 		
-		var url = "https://secure.experts-exchange.com/login.jsp"
-		url += "?msuLoginName=" + localStorage["username"];
-		url += "&msuPassword=" + localStorage["password"];
-		url += "&msuLoginSubmit=1&redirectURL=" + tab.url;
-
-		if(detach)
+		if(url)
 		{
-			chrome.tabs.remove(tab.id);
-		}
+			chrome.windows.create({
+				'url': url,
+				'incognito': true
+			});
 
-		chrome.windows.create({
-			'url': url,
-			'incognito': true
-		});				
+			if(detach)
+			{
+				chrome.tabs.remove(tab.id);
+			}
+		}		
 	}
 	
 	function zone_handler(name, tab) {
@@ -57,7 +83,7 @@
 				
 			} else {
 			
-				if(re['ee'].test(tab.url)) {
+				if(re['ee'].test(tab.url) || re['es'].test(tab.url)) {
 				
 					chrome.pageAction.show(tabId);
 					
@@ -67,14 +93,15 @@
 					zone_handler('pd', tab) ||
 					zone_handler('cv', tab) ||
 					zone_handler('cg', tab) ||
-					zone_handler('cs', tab);
+					zone_handler('cs', tab) ||
+					zone_handler('es', tab);
 				}
 			}
 		}
 	}
 	
 	function onClick_handler(tab) {
-	
+
 		handle_login(tab, localStorage["detonman"] == "true");
     }
 		

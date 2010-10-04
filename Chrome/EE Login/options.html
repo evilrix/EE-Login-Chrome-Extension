@@ -54,6 +54,7 @@ function save_options() {
 		save_radio("pd");
 		save_radio("cg");
 		save_radio("cs");
+		save_radio("es");
 
 		localStorage["detonman"] = document.getElementById("detonman").checked;
 
@@ -84,6 +85,7 @@ function restore_options() {
 	load_radio("pd");
 	load_radio("cg");
 	load_radio("cs");
+	load_radio("es");
 }
 
 </script>
@@ -261,6 +263,16 @@ td.help {
 				<input type="radio" name="cs" value="true" />
 			</td><td class="zones">
 				<input type="radio" name="cs" value="detach" />
+			</th></tr>
+
+			<tr><td class="hzones">
+				<label class="zones" for="es">EE&nbsp;Stuff: </label>
+			</td><td class="zones">
+				<input type="radio" name="es" value="false" />
+			</td><td class="zones">
+				<input type="radio" name="es" value="true" />
+			</td><td class="zones">
+				<input type="radio" name="es" value="detach" />
 			</th></tr>
 
 			<tr><td colspan="4">
