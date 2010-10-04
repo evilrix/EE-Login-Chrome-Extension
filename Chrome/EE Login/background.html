@@ -2,14 +2,20 @@
   <script>
 	var re = {
 		'ee': /^http:\/\/[^.]+\.experts-exchange\.com\//,
-		'md': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/Hidden\/(?:Admin_Only|Mods_Only)\//,
-		'za': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/Hidden\/Admin_Mod_ZA_Only\//,
-		'pe': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/Hidden\/(?:PE_Adm|Admin_Mod_PE_Only)\//,
-		'pd': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/Hidden\/Private_Discussions\//,
-		'cv': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/Hidden\/CV_Admin\//,
-		'cg': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/General\//,
-		'cs': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/Hidden\/(?!Admin_Only|Mods_Only|Admin_Mod_ZA_Only|Admin_Mod_PE_Only|Private_Discussions|CV_Admin)\//,
-		'es': /^http:\/\/(?:[^.]+\.)?ee-stuff\.com\/?/
+		'eead': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/Hidden\/Admin_Only\//,
+		'eemd': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/Hidden\/Mods_Only\//,
+		'eeza': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/Hidden\/Admin_Mod_ZA_Only\//,
+		'eepe': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/Hidden\/(?:PE_Adm|Admin_Mod_PE_Only)\//,
+		'eepd': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/Hidden\/Private_Discussions\//,
+		'eecv': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/Hidden\/CV_Admin\//,
+		'eecg': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/General\//,
+		'eecs': /^http:\/\/[^.]+\.experts-exchange\.com\/Community_Support\/Hidden\/(?!Admin_Only|Mods_Only|Admin_Mod_ZA_Only|Admin_Mod_PE_Only|Private_Discussions|CV_Admin)\//,
+		'es': /^http:\/\/(?:[^.]+\.)?ee-stuff\.com\/?/,
+		'esad': /^http:\/\/(?:[^.]+\.)?ee-stuff\.com\/Admin\//,
+		'esmd': /^http:\/\/(?:[^.]+\.)?ee-stuff\.com\/Mod\//,
+		'esza': /^http:\/\/(?:[^.]+\.)?ee-stuff\.com\/ZA\//,
+		'espe': /^http:\/\/(?:[^.]+\.)?ee-stuff\.com\/PE\//,
+		'escv': /^http:\/\/(?:[^.]+\.)?ee-stuff\.com\/CV\//,
 		
 	};
 	
@@ -83,18 +89,28 @@
 				
 			} else {
 			
-				if(re['ee'].test(tab.url) || re['es'].test(tab.url)) {
+				if(re['ee'].test(tab.url)) {
 				
 					chrome.pageAction.show(tabId);
 					
-					zone_handler('md', tab) ||
-					zone_handler('za', tab) ||
-					zone_handler('pe', tab) ||
-					zone_handler('pd', tab) ||
-					zone_handler('cv', tab) ||
-					zone_handler('cg', tab) ||
-					zone_handler('cs', tab) ||
-					zone_handler('es', tab);
+					zone_handler('eemd', tab) ||
+					zone_handler('eeza', tab) ||
+					zone_handler('eepe', tab) ||
+					zone_handler('eepd', tab) ||
+					zone_handler('eecv', tab) ||
+					zone_handler('eecg', tab) ||
+					zone_handler('eecs', tab);
+				}
+				else
+				if(re['es'].test(tab.url)) {
+				
+					chrome.pageAction.show(tabId);
+					
+					zone_handler('esad', tab) ||
+					zone_handler('esmd', tab) ||
+					zone_handler('esza', tab) ||
+					zone_handler('espe', tab) ||
+					zone_handler('escv', tab);
 				}
 			}
 		}

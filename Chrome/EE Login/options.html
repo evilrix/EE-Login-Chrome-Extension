@@ -47,14 +47,19 @@ function save_options() {
 		localStorage["username"] = username;
 		localStorage["password"] = password;
 
-		save_radio("md");
-		save_radio("za");
-		save_radio("pe");
-		save_radio("cv");
-		save_radio("pd");
-		save_radio("cg");
-		save_radio("cs");
-		save_radio("es");
+		save_radio("eead");
+		save_radio("eemd");
+		save_radio("eeza");
+		save_radio("eepe");
+		save_radio("eecv");
+		save_radio("eepd");
+		save_radio("eecg");
+		save_radio("eecs");
+		save_radio("esad");
+		save_radio("esmd");
+		save_radio("esza");
+		save_radio("espe");
+		save_radio("escv");
 
 		localStorage["detonman"] = document.getElementById("detonman").checked;
 
@@ -78,14 +83,19 @@ function restore_options() {
 		document.getElementById("detonman").checked = localStorage["detonman"] == "true";
 	}
 	
-	load_radio("md");
-	load_radio("za");
-	load_radio("pe");
-	load_radio("cv");
-	load_radio("pd");
-	load_radio("cg");
-	load_radio("cs");
-	load_radio("es");
+	load_radio("eead");
+	load_radio("eemd");
+	load_radio("eeza");
+	load_radio("eepe");
+	load_radio("eecv");
+	load_radio("eepd");
+	load_radio("eecg");
+	load_radio("eecs");
+	load_radio("esad");
+	load_radio("esmd");
+	load_radio("esza");
+	load_radio("espe");
+	load_radio("escv");
 }
 
 </script>
@@ -103,6 +113,7 @@ span.zones {
 
 label.zones {
 	padding-left: 15px;
+	font-size:11;
 }
 
 th.zones {
@@ -176,9 +187,6 @@ td.help {
 			<tr><td colspan=4 >
 			</td></tr>
 
-			<tr><td colspan=4 >
-			</td></tr>
-
 			<tr><th class="hzones">
 				<span class="zones" title="Select the zones will automatically open a new window and login.">
 					Auto-login:
@@ -196,85 +204,138 @@ td.help {
 			</td></tr>
 
 			<tr><td class="hzones">
-				<label class="zones" for="md">Mods&nbsp;Only: </label>
+				<label class="zones" for="eead">Admin&nbsp;Only: </label>
 			</td><td class="zones">
-				<input type="radio" name="md" value="false" />
+				<input type="radio" name="eead" value="false" />
 			</td><td class="zones">
-				<input type="radio" name="md" value="true" />
+				<input type="radio" name="eead" value="true" />
 			</td><td class="zones">
-				<input type="radio" name="md" value="detach" />
+				<input type="radio" name="eead" value="detach" />
 			</th></tr>
 			
 			<tr><td class="hzones">
-				<label class="zones" for="za">ZAs&nbsp;Only: </label>
+				<label class="zones" for="eemd">Mods&nbsp;Only: </label>
 			</td><td class="zones">
-				<input type="radio" name="za" value="false" />
+				<input type="radio" name="eemd" value="false" />
 			</td><td class="zones">
-				<input type="radio" name="za" value="true" />
+				<input type="radio" name="eemd" value="true" />
 			</td><td class="zones">
-				<input type="radio" name="za" value="detach" />
+				<input type="radio" name="eemd" value="detach" />
+			</th></tr>
+			
+			<tr><td class="hzones">
+				<label class="zones" for="eeza">ZAs&nbsp;Only: </label>
+			</td><td class="zones">
+				<input type="radio" name="eeza" value="false" />
+			</td><td class="zones">
+				<input type="radio" name="eeza" value="true" />
+			</td><td class="zones">
+				<input type="radio" name="eeza" value="detach" />
 			</th></tr>
 
 			<tr><td class="hzones">
-				<label class="zones" for="pe">PEs&nbsp;Only: </label>
+				<label class="zones" for="eepe">PEs&nbsp;Only: </label>
 			</td><td class="zones">
-				<input type="radio" name="pe" value="false" />
+				<input type="radio" name="eepe" value="false" />
 			</td><td class="zones">
-				<input type="radio" name="pe" value="true" />
+				<input type="radio" name="eepe" value="true" />
 			</td><td class="zones">
-				<input type="radio" name="pe" value="detach" />
+				<input type="radio" name="eepe" value="detach" />
 			</th></tr>
 
 			<tr><td class="hzones">
-				<label class="zones" for="cv">CVs&nbsp;Only: </label>
+				<label class="zones" for="eecv">CVs&nbsp;Only: </label>
 			</td><td class="zones">
-				<input type="radio" name="cv" value="false" />
+				<input type="radio" name="eecv" value="false" />
 			</td><td class="zones">
-				<input type="radio" name="cv" value="true" />
+				<input type="radio" name="eecv" value="true" />
 			</td><td class="zones">
-				<input type="radio" name="cv" value="detach" />
+				<input type="radio" name="eecv" value="detach" />
 			</th></tr>
 
 			<tr><td class="hzones">
-				<label class="zones" for="pd">PD&nbsp;Zone: </label>
+				<label class="zones" for="eepd">PD&nbsp;Zone: </label>
 			</td><td class="zones">
-				<input type="radio" name="pd" value="false" />
+				<input type="radio" name="eepd" value="false" />
 			</td><td class="zones">
-				<input type="radio" name="pd" value="true" />
+				<input type="radio" name="eepd" value="true" />
 			</td><td class="zones">
-				<input type="radio" name="pd" value="detach" />
+				<input type="radio" name="eepd" value="detach" />
 			</th></tr>
 
 			<tr><td class="hzones">
-				<label class="zones" for="cg">CS&nbsp;General: </label>
+				<label class="zones" for="eecg">CS&nbsp;General: </label>
 			</td><td class="zones">
-				<input type="radio" name="cg" value="false" />
+				<input type="radio" name="eecg" value="false" />
 			</td><td class="zones">
-				<input type="radio" name="cg" value="true" />
+				<input type="radio" name="eecg" value="true" />
 			</td><td class="zones">
-				<input type="radio" name="cg" value="detach" />
+				<input type="radio" name="eecg" value="detach" />
 			</th></tr>
 
 			<tr><td class="hzones">
-				<label class="zones" for="cs">CS&nbsp;Other: </label>
+				<label class="zones" for="eecs">CS&nbsp;Other: </label>
 			</td><td class="zones">
-				<input type="radio" name="cs" value="false" />
+				<input type="radio" name="eecs" value="false" />
 			</td><td class="zones">
-				<input type="radio" name="cs" value="true" />
+				<input type="radio" name="eecs" value="true" />
 			</td><td class="zones">
-				<input type="radio" name="cs" value="detach" />
+				<input type="radio" name="eecs" value="detach" />
+			</th></tr>
+
+			<tr><td colspan=4 >
+				<hr>
+			</td></tr>
+			
+			<tr><td class="hzones">
+				<label class="zones" for="esad">EE&nbsp;Stuff&nbsp;Admin: </label>
+			</td><td class="zones">
+				<input type="radio" name="esad" value="false" />
+			</td><td class="zones">
+				<input type="radio" name="esad" value="true" />
+			</td><td class="zones">
+				<input type="radio" name="esad" value="detach" />
+			</th></tr>
+			
+			<tr><td class="hzones">
+				<label class="zones" for="esmd">EE&nbsp;Stuff&nbsp;Mod: </label>
+			</td><td class="zones">
+				<input type="radio" name="esmd" value="false" />
+			</td><td class="zones">
+				<input type="radio" name="esmd" value="true" />
+			</td><td class="zones">
+				<input type="radio" name="esmd" value="detach" />
 			</th></tr>
 
 			<tr><td class="hzones">
-				<label class="zones" for="es">EE&nbsp;Stuff: </label>
+				<label class="zones" for="esza">EE&nbsp;Stuff&nbsp;ZA: </label>
 			</td><td class="zones">
-				<input type="radio" name="es" value="false" />
+				<input type="radio" name="esza" value="false" />
 			</td><td class="zones">
-				<input type="radio" name="es" value="true" />
+				<input type="radio" name="esza" value="true" />
 			</td><td class="zones">
-				<input type="radio" name="es" value="detach" />
+				<input type="radio" name="esza" value="detach" />
 			</th></tr>
 
+			<tr><td class="hzones">
+				<label class="zones" for="espe">EE&nbsp;Stuff&nbsp;PE: </label>
+			</td><td class="zones">
+				<input type="radio" name="espe" value="false" />
+			</td><td class="zones">
+				<input type="radio" name="espe" value="true" />
+			</td><td class="zones">
+				<input type="radio" name="espe" value="detach" />
+			</th></tr>
+
+			<tr><td class="hzones">
+				<label class="zones" for="escv">EE&nbsp;Stuff&nbsp;CV: </label>
+			</td><td class="zones">
+				<input type="radio" name="escv" value="false" />
+			</td><td class="zones">
+				<input type="radio" name="escv" value="true" />
+			</td><td class="zones">
+				<input type="radio" name="escv" value="detach" />
+			</th></tr>
 			<tr><td colspan="4">
 			<hr>
 			</td></tr>
