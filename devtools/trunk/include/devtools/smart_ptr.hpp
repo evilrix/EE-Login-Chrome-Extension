@@ -60,10 +60,10 @@ public:
 	{
 		try
 		{
-			if(0 == --*pn_)
+			if(pn_ && 0 == --*pn_)
 			{
 				delete_policy_()(px_);
-				delete pn_; pn_ = 0;
+				delete pn_;;
 			}
 		}
 		catch(...) 
