@@ -1,27 +1,46 @@
 <html>
 <head>
   <script>
-	var reGib = /(?!.+sout=1)^http:\/\/[^.]+\.google\.[^\/]+\/images/;
+	var reMain = /(?!.+sout=1)^http:\/\/[^.]+\.google\.[^\/]+\/(?:images|.+&tbm=isch)/;
+	var rePrev = /http:\/\/[^.]+\.google\.[^\/]+\/.+[&?]imgurl=([^&]+)/;
 	
-	function handle(tab)
+	function handleMain(tab)
 	{
 		chrome.tabs.update(tab.id, {'url': tab.url + '&sout=1'});
 	}
 	
+	function handlePrev(tab, newurl)
+	{
+		chrome.tabs.update(tab.id, {'url': newurl});
+	}
+
     chrome.pageAction.onClicked.addListener(function(tab) {
-		handle(tab)
+		handle(tab);
     });
 	
     chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
-		if(changeInfo.status == "loading" && reGib.test(tab.url))
+
+	if(changeInfo.status == "loading")
 		{			
-			if(localStorage["automatic"] == "true")
+			if(reMain.test(tab.url))
 			{
-				handle(tab)
+				if(localStorage["automatic"] == "true")
+				{
+					handleMain(tab);
+				}
+				else
+				{
+					chrome.pageAction.show(tab.id);
+				}
 			}
 			else
 			{
-				chrome.pageAction.show(tab.id);
+				var match = rePrev.exec(tab.url);
+				
+				if(match && localStorage["noprev"] == "true")
+				{
+					handlePrev(tab, match[1]);
+				}
 			}
 		}
     });
