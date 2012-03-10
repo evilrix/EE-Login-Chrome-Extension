@@ -1,19 +1,19 @@
 {
-	"name": "EE Login",
-	"version": "1.0.1.1",
-	"description": "Logs you into your Experts Exchange account, using the incognito window.",
-	"background_page": "background.html",
-	"page_action": {
-		"default_icon": "icon16.png",
-		"default_title": "EE Login"
-		},
-	"options_page": "options.html",
-	"icons": {
-		"16": "icon16.png",
-		"48": "icon48.png",
-		"128": "icon128.png"
-	},
-	"permissions": [
-		"tabs"
-	]
+   "name": "EE Login",
+   "version": "1.0.1.2",
+   "description": "Logs you into your Experts Exchange account, using the incognito window.",
+   "background_page": "background.html",
+   "page_action": {
+      "default_icon": "icon16.png",
+      "default_title": "EE Login"
+      },
+   "options_page": "options.html",
+   "icons": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+   },
+   "permissions": [
+      "tabs"
+   ]
 }

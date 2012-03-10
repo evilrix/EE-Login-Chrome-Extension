@@ -1,3 +1,7 @@
+Author: Ricky Cormier
+Maintainer: Ricky Cormier
+Licence: GPL3 (http://www.gnu.org/licenses/gpl-3.0.txt)
+
 A simple extension to log you into your EE account. You can configure it to log you in via an incognito window.
 
 Once your credentials have been added to the options page just a click of the extensions button will take you to EE's homepage.
@@ -28,17 +32,19 @@ Finally, you can also choose for manual invocations to detach rather than clone 
 
 Version History: -
 
-1.0.1.1   - Added support for eestuff zones (admin, mod, za, pe. cv)
+1.0.1.2   - Added support for EE v10.
 
-1.0.1.0   - Added support for eestuff (this is experimental - watch out for dragons!)
+1.0.1.1   - Added support for eestuff zones (admin, mod, za, pe. cv).
 
-1.0.0.14 - don't assume all EE pages start with www (eg. blogs!)
+1.0.1.0   - Added support for eestuff (this is experimental - watch out for dragons!).
 
-1.0.0.13 - Added CS General as a seperate auto-login zone
+1.0.0.14 - don't assume all EE pages start with www (eg. blogs!).
 
-1.0.0.12 - Cosmetic change (docked is now known as clone)
+1.0.0.13 - Added CS General as a seperate auto-login zone.
 
-1.0.0.11 - Ensure sensible defaults on first every install.
+1.0.0.12 - Cosmetic change (docked is now known as clone).
+
+1.0.0.11 - Ensure sensible defaults on first every install..
 
 1.0.0.10 - Toggle to allow manual logins to detach rather than always dock.
 
