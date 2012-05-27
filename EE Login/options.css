@@ -1,0 +1,48 @@
+label.login {
+   padding-left: 15px;
+}
+
+span.zones {
+   padding-left: 5px;
+   color:gray;
+   font-style:italic;
+}
+
+label.zones {
+   padding-left: 15px;
+   font-size:11;
+}
+
+th.zones {
+   text-align: center;
+   width: 25%;
+   font-size: 12;
+   border: 0px dotted lightgray;
+}
+
+td.zones {
+   text-align: center;
+   width: 25%;
+   font-size: 12;
+   border: 0px dotted lightgray;
+}
+
+th.hzones {
+   text-align: center;
+   width: 25%;
+   font-size: 12;
+   border: 0px dotted lightgray;
+}
+
+td.hzones {
+   text-align: right;
+   width: 25%;
+   font-size: 12;
+   border: 0px dotted lightgray;
+}
+
+td.help {
+   padding-left: 5px;
+   color:gray;
+   font-style:italic;
+}

@@ -1,365 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
 <html>
-<head><title>EE Login</title></head>
-<script type="text/javascript">
+   <head>
+      <title>EE Login</title>
+      <script type="text/javascript" src="data.js">
+      </script>
+      <script type="text/javascript" src="options.js">
+      </script>
+      <link rel="stylesheet" type="text/css" href="options.css" />
+   </head>
 
+   <body onload="restore_options()">
+      <table summary="" style="width: 320px;">
+         <tr>
+            <td colspan="2"><a href="http://www.experts-exchange.com/"
+                  target="_blank"><img src="ee.jpg" style="width: 100%;"
+                  alt="Experts Exchange" title="Experts Exchange"></a></td>
+         </tr>
 
-// Saves options to localStorage.
-function save_radio(name) {
-   var rds = document.getElementsByName(name);
-   var res = 0;
+         <tr>
+            <td><label for="username">Username:</label></td>
 
-   for(var i = 0 ; i < rds.length ; ++i) {
-      if(rds[i].checked) {
-         res = i;
-      }
-   }
+            <td><input type="text" id="username" style="width: 75%;"
+               title="Your username goes here."></td>
+         </tr>
 
-   localStorage[name] = res;
-}
+         <tr>
+            <td><label for="password">Password:</label></td>
 
-function load_radio(name) {
-   var rds = document.getElementsByName(name);
-   var res = 0;
+            <td><input type="password" id="password" style=
+               "width: 75%;" title="The password goes here."></td>
+         </tr>
 
-   if(localStorage["username"])
-   {
-      for(var i = 0 ; i < rds.length ; ++i) {
-         rds[i].checked = (i == localStorage[name]);
-      }
-   }
-   else
-   {
-      rds[0].checked = true;
-   }
-}
+         <tr>
+            <td colspan="2"><br></td>
+         </tr>
 
-function save_options() {
+         <tr>
+            <td colspan="2">
+               <table summary="" style=
+                  "border: 1px dotted lightgray;width: 100%;">
+                  <tr>
+                     <td colspan="4"></td>
+                  </tr>
 
-   var username = document.getElementById("username").value;
-   var password = document.getElementById("password").value;
+                  <tr>
+                     <th class="hzones"><span class="zones" title=
+                           "Select the zones will automatically open a new window and login.">
+                           Auto-login:</span></th>
 
-   if(!username || !password)
-   {
-      alert("You must set a username and password!");
-   }
-   else
-   {
-      localStorage["username"] = username;
-      localStorage["password"] = password;
+                     <th class="zones">Disable</th>
 
-      save_radio("eead");
-      save_radio("eemd");
-      save_radio("eeza");
-      save_radio("eepe");
-      save_radio("eecv");
-      save_radio("eepd");
-      save_radio("eecg");
-      save_radio("eecs");
-      save_radio("esad");
-      save_radio("esmd");
-      save_radio("esza");
-      save_radio("espe");
-      save_radio("escv");
+                     <th class="zones">Clone</th>
 
-      localStorage["detonman"] = document.getElementById("detonman").checked;
+                     <th class="zones">Detach</th>
+                  </tr>
 
-      // Update status to let user know options were saved.
-      var status = document.getElementById("status");
-      status.innerHTML = "Saving...";
-      setTimeout(function() {
-      status.innerHTML = "";
-      }, 750);
-   }
-}
+                  <tr>
+                     <td colspan="4">
+                        <hr>
+                     </td>
+                  </tr>
 
-// Restores select box state to saved value from localStorage.
-function restore_options() {
-   if(localStorage["username"])
-   {
-      document.getElementById("username").value = localStorage["username"];
-      document.getElementById("password").value = localStorage["password"];
+                  <script type="text/javascript"> generate_opts_table(); </script>
 
+                  <tr>
+                     <td colspan="4" style=
+                        "text-align:right;padding-right:15px;">
+                        <label for="detonman"><span class=
+                              "zones">Detach&nbsp;on&nbsp;manual
+                              login:&nbsp;</span></label> <input type=
+                        "checkbox" id="detonman"></td>
+                  </tr>
+               </table>
+            </td>
+         </tr>
 
-      document.getElementById("detonman").checked = localStorage["detonman"] == "true";
-   }
+         <tr>
+            <td colspan="2"><br></td>
+         </tr>
 
-   load_radio("eead");
-   load_radio("eemd");
-   load_radio("eeza");
-   load_radio("eepe");
-   load_radio("eecv");
-   load_radio("eepd");
-   load_radio("eecg");
-   load_radio("eecs");
-   load_radio("esad");
-   load_radio("esmd");
-   load_radio("esza");
-   load_radio("espe");
-   load_radio("escv");
-}
+         <tr>
+            <td>
+               <div id="status" style="color:red;"></div>
+            </td>
 
-</script>
-
-<style type="text/css">
-label.login {
-   padding-left: 15px;
-}
-
-span.zones {
-   padding-left: 5px;
-   color:gray;
-   font-style:italic;
-}
-
-label.zones {
-   padding-left: 15px;
-   font-size:11;
-}
-
-th.zones {
-   text-align: center;
-   width: 25%;
-   font-size: 12;
-   border: 0px dotted lightgray;
-}
-
-td.zones {
-   text-align: center;
-   width: 25%;
-   font-size: 12;
-   border: 0px dotted lightgray;
-}
-
-th.hzones {
-   text-align: center;
-   width: 25%;
-   font-size: 12;
-   border: 0px dotted lightgray;
-}
-
-td.hzones {
-   text-align: right;
-   width: 25%;
-   font-size: 12;
-   border: 0px dotted lightgray;
-}
-
-td.help {
-   padding-left: 5px;
-   color:gray;
-   font-style:italic;
-}
-
-
-</style>
-
-<body onload="restore_options()">
-
-<table style="width: 320px;">
-   <tr><td colspan="2">
-      <a href="http://www.experts-exchange.com/" target="_blank"><img src="ee.jpg" style="width: 100%;" alt="Experts Exchange" title="Experts Exchange"/></a>
-   </td></tr>
-
-   <tr><td>
-      <label for="username">Username: </label>
-   </td><td>
-      <input type="text" id="username" style="width: 75%;" title="Your username goes here.">
-   </td></tr>
-
-   <tr><td>
-      <label for="password">Password: </label>
-   </td><td>
-      <input type="password" id="password" style="width: 75%;" title="The password goes here.">
-   </td></tr>
-
-   <tr><td>
-      <label for="incognito">Incognito: </label>
-   </td><td>
-      <input type="checkbox" id="incognito" checked="true" disabled="true" title="The login is always via an incognito window.">
-   </td></tr>
-
-   <tr><td colspan="2">
-   <br>
-   </td></tr>
-
-   <tr><td colspan=2>
-      <table style="border: 1px dotted lightgray;width: 100%;">
-         <tr><td colspan=4 >
-         </td></tr>
-
-         <tr><th class="hzones">
-            <span class="zones" title="Select the zones will automatically open a new window and login.">
-               Auto-login:
-            </span>
-         </th><th class="zones">
-            Disable
-         </th><th class="zones">
-            Clone
-         </th><th class="zones">
-            Detach
-         </th></tr>
-
-         <tr><td colspan=4 >
-            <hr>
-         </td></tr>
-
-         <tr><td class="hzones">
-            <label class="zones" for="eead">Admin&nbsp;Only: </label>
-         </td><td class="zones">
-            <input type="radio" name="eead" value="false" />
-         </td><td class="zones">
-            <input type="radio" name="eead" value="true" />
-         </td><td class="zones">
-            <input type="radio" name="eead" value="detach" />
-         </th></tr>
-
-         <tr><td class="hzones">
-            <label class="zones" for="eemd">Mods&nbsp;Only: </label>
-         </td><td class="zones">
-            <input type="radio" name="eemd" value="false" />
-         </td><td class="zones">
-            <input type="radio" name="eemd" value="true" />
-         </td><td class="zones">
-            <input type="radio" name="eemd" value="detach" />
-         </th></tr>
-
-         <tr><td class="hzones">
-            <label class="zones" for="eeza">ZAs&nbsp;Only: </label>
-         </td><td class="zones">
-            <input type="radio" name="eeza" value="false" />
-         </td><td class="zones">
-            <input type="radio" name="eeza" value="true" />
-         </td><td class="zones">
-            <input type="radio" name="eeza" value="detach" />
-         </th></tr>
-
-         <tr><td class="hzones">
-            <label class="zones" for="eepe">PEs&nbsp;Only: </label>
-         </td><td class="zones">
-            <input type="radio" name="eepe" value="false" />
-         </td><td class="zones">
-            <input type="radio" name="eepe" value="true" />
-         </td><td class="zones">
-            <input type="radio" name="eepe" value="detach" />
-         </th></tr>
-
-         <tr><td class="hzones">
-            <label class="zones" for="eecv">CVs&nbsp;Only: </label>
-         </td><td class="zones">
-            <input type="radio" name="eecv" value="false" />
-         </td><td class="zones">
-            <input type="radio" name="eecv" value="true" />
-         </td><td class="zones">
-            <input type="radio" name="eecv" value="detach" />
-         </th></tr>
-
-         <tr><td class="hzones">
-            <label class="zones" for="eepd">PD&nbsp;Zone: </label>
-         </td><td class="zones">
-            <input type="radio" name="eepd" value="false" />
-         </td><td class="zones">
-            <input type="radio" name="eepd" value="true" />
-         </td><td class="zones">
-            <input type="radio" name="eepd" value="detach" />
-         </th></tr>
-
-         <tr><td class="hzones">
-            <label class="zones" for="eecg">CS&nbsp;General: </label>
-         </td><td class="zones">
-            <input type="radio" name="eecg" value="false" />
-         </td><td class="zones">
-            <input type="radio" name="eecg" value="true" />
-         </td><td class="zones">
-            <input type="radio" name="eecg" value="detach" />
-         </th></tr>
-
-         <tr><td class="hzones">
-            <label class="zones" for="eecs">CS&nbsp;Other: </label>
-         </td><td class="zones">
-            <input type="radio" name="eecs" value="false" />
-         </td><td class="zones">
-            <input type="radio" name="eecs" value="true" />
-         </td><td class="zones">
-            <input type="radio" name="eecs" value="detach" />
-         </th></tr>
-
-         <tr><td colspan=4 >
-            <hr>
-         </td></tr>
-
-         <tr><td class="hzones">
-            <label class="zones" for="esad">EE&nbsp;Stuff&nbsp;Admin: </label>
-         </td><td class="zones">
-            <input type="radio" name="esad" value="false" />
-         </td><td class="zones">
-            <input type="radio" name="esad" value="true" />
-         </td><td class="zones">
-            <input type="radio" name="esad" value="detach" />
-         </th></tr>
-
-         <tr><td class="hzones">
-            <label class="zones" for="esmd">EE&nbsp;Stuff&nbsp;Mod: </label>
-         </td><td class="zones">
-            <input type="radio" name="esmd" value="false" />
-         </td><td class="zones">
-            <input type="radio" name="esmd" value="true" />
-         </td><td class="zones">
-            <input type="radio" name="esmd" value="detach" />
-         </th></tr>
-
-         <tr><td class="hzones">
-            <label class="zones" for="esza">EE&nbsp;Stuff&nbsp;ZA: </label>
-         </td><td class="zones">
-            <input type="radio" name="esza" value="false" />
-         </td><td class="zones">
-            <input type="radio" name="esza" value="true" />
-         </td><td class="zones">
-            <input type="radio" name="esza" value="detach" />
-         </th></tr>
-
-         <tr><td class="hzones">
-            <label class="zones" for="espe">EE&nbsp;Stuff&nbsp;PE: </label>
-         </td><td class="zones">
-            <input type="radio" name="espe" value="false" />
-         </td><td class="zones">
-            <input type="radio" name="espe" value="true" />
-         </td><td class="zones">
-            <input type="radio" name="espe" value="detach" />
-         </th></tr>
-
-         <tr><td class="hzones">
-            <label class="zones" for="escv">EE&nbsp;Stuff&nbsp;CV: </label>
-         </td><td class="zones">
-            <input type="radio" name="escv" value="false" />
-         </td><td class="zones">
-            <input type="radio" name="escv" value="true" />
-         </td><td class="zones">
-            <input type="radio" name="escv" value="detach" />
-         </th></tr>
-         <tr><td colspan="4">
-         <hr>
-         </td></tr>
-
-         <tr><td colspan=4 style="text-align:right;padding-right:15px;">
-            <label for="detonman"><span class="zones">
-               Detach&nbsp;on&nbsp;manual login:&nbsp;
-            </span></label>
-            <input type="checkbox" id="detonman" />
-         </td></tr>
+            <td style="text-align:right"><button onclick=
+                  "save_options()" title="Save settings.">Save</button></td>
+         </tr>
       </table>
-   </td></tr>
-
-   <tr><td colspan="2">
-   <br>
-   </td></tr>
-
-   <tr><td>
-      <div id="status" style="color:red;"/>
-   </td><td style="text-align:right">
-      <button onclick="save_options()" title="Save settings.">Save</button>
-   </td></tr>
-
-   </table>
-
-</body>
+   </body>
 </html>
