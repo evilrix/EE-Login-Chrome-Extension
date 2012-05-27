@@ -1,11 +1,8 @@
-Author: Ricky Cormier
-Maintainer: Ricky Cormier
-Licence: GPL3 (http://www.gnu.org/licenses/gpl-3.0.txt)
+A simple extension to automatically log you into EE, via Incognito mode, with the EE account of your choice. 
 
-A simple extension to log you into your EE account. You can configure it to log you in via an incognito window.
+You can either click on the little icon in the Omnibar or configure it to automatically log you in depending upon the area of the site you are accessing.
 
-Once your credentials have been added to the options page just a click of the extensions button will take you to EE's homepage.
-
+Useful for EE Badgers who have separate privileged accounts.
 
 Instructions
 =-=-=-=-=-=
@@ -31,6 +28,12 @@ detach- a new window will open to log you in and the old one will be closed
 Finally, you can also choose for manual invocations to detach rather than clone (the default for manual).
 
 Version History: -
+
+1.0.3.0   - Ask for confirmation before going incognito.
+
+1.0.2.1   - Improved layout.
+
+1.0.2.0   - Added support Articles and RA zone.
 
 1.0.1.2   - Added support for EE v10.
 

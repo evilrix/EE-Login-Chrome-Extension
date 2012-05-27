@@ -43,7 +43,7 @@ function save_options() {
 
       for(section in re)
       {
-         for(key in re[section][1])
+         for(key in re[section]['regex'][1])
          {
             save_radio(key);
          }
@@ -73,7 +73,7 @@ function restore_options() {
 
    for(section in re)
    {
-      for(key in re[section][1])
+      for(key in re[section]['regex'][1])
       {
          load_radio(key);
       }
@@ -98,7 +98,8 @@ function generate_opts_table()
 {
    for(section in re)
    {
-      for(key in re[section][1])
+      wl('<tr> <td colspan="5">{section}</td></tr>'.supplant({'section': re[section]['name']}));
+      for(key in re[section]['regex'][1])
       {
          wl('<tr> \
                <td class="hzones"><label class="zones" for= \
@@ -109,10 +110,12 @@ function generate_opts_table()
                value="true"></td> \
                <td class="zones"><input type="radio" name="{key}" \
                value="detach"></td> \
-               </tr>'.supplant({'key': key, 'name': re[section][1][key][0]}));
+               <td class="zones"><input type="checkbox" name="{key}" \
+               value=""></td> \
+               </tr>'.supplant({'key': key, 'name': re[section]['regex'][1][key][0]}));
       }
 
-      wl('<tr> <td colspan="4"><hr></td></tr>');
+      wl('<tr> <td colspan="5"><hr></td></tr>');
    }
 }
 

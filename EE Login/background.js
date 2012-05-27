@@ -5,11 +5,11 @@ function get_redirect_url(tab)
 {
    var url;
 
-   if(re['ee'][0].test(tab.url))
+   if(re['ee']['regex'][0].test(tab.url))
    {
       url = "https://secure.experts-exchange.com/login.jsp";
    }
-   else if(re['es'][0].test(tab.url))
+   else if(re['es']['regex'][0].test(tab.url))
    {
       url = " http://ee-stuff.com/login.php";
    }
@@ -24,7 +24,7 @@ function get_redirect_url(tab)
    return url;
 }
 
-function handle_login(tab, detach)
+function handle_login(tab, detach, ask)
 {
    if(!localStorage["username"])
    {
@@ -33,18 +33,21 @@ function handle_login(tab, detach)
       return;
    }
 
-   var url = get_redirect_url(tab);
-
-   if(url)
+   if(ask ? confirm("Go incognito") : true)
    {
-      chrome.windows.create( {
-         'url': url,
-         'incognito': true
-      });
+      var url = get_redirect_url(tab);
 
-      if(detach)
+      if(url)
       {
-         chrome.tabs.remove(tab.id);
+         chrome.windows.create( {
+            'url': url,
+            'incognito': true
+         });
+
+         if(detach)
+         {
+            chrome.tabs.remove(tab.id);
+         }
       }
    }
 }
@@ -52,9 +55,9 @@ function handle_login(tab, detach)
 function zone_handler(section, key, tab) {
    var ret = false
 
-      if(localStorage[key] > 0 && re[section][1][key][1].test(tab.url))
+      if(localStorage[key] > 0 && re[section]['regex'][1][key][1].test(tab.url))
       {
-         handle_login(tab, (localStorage[key] == 2));
+         handle_login(tab, (localStorage[key] == 2), (localStorage[key] == 3));
          ret = true;
       }
 
@@ -72,12 +75,12 @@ function onUpdate_handler(tabId, changeInfo, tab) {
 
          var section;
 
-         if(re['ee'][0].test(tab.url)) {
+         if(re['ee']['regex'][0].test(tab.url)) {
 
             chrome.pageAction.show(tabId);
             section = 'ee';
          }
-         else if(re['es'][0].test(tab.url)) {
+         else if(re['es']['regex'][0].test(tab.url)) {
 
             chrome.pageAction.show(tabId);
             section = 'es';
@@ -87,7 +90,7 @@ function onUpdate_handler(tabId, changeInfo, tab) {
             return;
          }
 
-         for(key in re[section][1])
+         for(key in re[section]['regex'][1])
          {
             if(zone_handler(section, key, tab))
             {
