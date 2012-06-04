@@ -57,7 +57,7 @@ function zone_handler(section, key, tab) {
 
       if(localStorage[key] > 0 && re[section]['regex'][1][key][1].test(tab.url))
       {
-         handle_login(tab, (localStorage[key] == 2), (localStorage[key] == 3));
+         handle_login(tab, (localStorage[key] == 2), (localStorage[key + '_cb'] == 1));
          ret = true;
       }
 

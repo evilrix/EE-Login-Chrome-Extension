@@ -1,6 +1,6 @@
 {
    "name": "EE Login",
-      "version": "1.0.3.0",
+      "version": "1.0.3.1",
       "description": "Logs you into your Experts Exchange account, using the incognito window.",
       "background": {
          "scripts": [ "data.js", "background.js" ]

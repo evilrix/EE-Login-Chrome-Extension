@@ -1,3 +1,12 @@
+function radio_click_handler(name)
+{
+   var rds = document.getElementsByName(name);
+   var cbname = name + '_cb';
+   var cb = document.getElementById(cbname);
+
+   cb.disabled = rds[0].checked;
+}
+
 function save_radio(name) {
    var rds = document.getElementsByName(name);
    var res = 0;
@@ -13,7 +22,6 @@ function save_radio(name) {
 
 function load_radio(name) {
    var rds = document.getElementsByName(name);
-   var res = 0;
 
    if(localStorage["username"])
    {
@@ -25,6 +33,28 @@ function load_radio(name) {
    {
       rds[0].checked = true;
    }
+}
+
+function save_cb(name) {
+   var name = name + '_cb';
+   var cb = document.getElementById(name);
+   localStorage[name] = cb.checked?1:0;
+}
+
+function load_cb(name) {
+   var cbname = name + '_cb';
+   var cb = document.getElementById(cbname);
+
+   if(localStorage["username"])
+   {
+      cb.checked = (1 == localStorage[cbname]);
+   }
+   else
+   {
+      cb.checked = false;
+   }
+
+   radio_click_handler(name);
 }
 
 function save_options() {
@@ -46,6 +76,7 @@ function save_options() {
          for(key in re[section]['regex'][1])
          {
             save_radio(key);
+            save_cb(key);
          }
       }
 
@@ -76,6 +107,7 @@ function restore_options() {
       for(key in re[section]['regex'][1])
       {
          load_radio(key);
+         load_cb(key);
       }
    }
 }
@@ -104,14 +136,10 @@ function generate_opts_table()
          wl('<tr> \
                <td class="hzones"><label class="zones" for= \
                "{key}">{name}:</label></td> \
-               <td class="zones"><input type="radio" name="{key}" \
-               value="false"></td> \
-               <td class="zones"><input type="radio" name="{key}" \
-               value="true"></td> \
-               <td class="zones"><input type="radio" name="{key}" \
-               value="detach"></td> \
-               <td class="zones"><input type="checkbox" name="{key}" \
-               value=""></td> \
+               <td class="zones"><input onclick="radio_click_handler(\'{key}\')" type="radio" name="{key}"></td> \
+               <td class="zones"><input onclick="radio_click_handler(\'{key}\')"  type="radio" name="{key}"></td> \
+               <td class="zones"><input onclick="radio_click_handler(\'{key}\')"  type="radio" name="{key}"></td> \
+               <td class="zones"><input type="checkbox" id="{key}_cb"></td> \
                </tr>'.supplant({'key': key, 'name': re[section]['regex'][1][key][0]}));
       }
 

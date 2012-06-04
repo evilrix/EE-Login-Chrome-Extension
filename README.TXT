@@ -29,6 +29,8 @@ Finally, you can also choose for manual invocations to detach rather than clone 
 
 Version History: -
 
+1.0.3.1   - Fix small issue when saving 'confirmation' state
+
 1.0.3.0   - Ask for confirmation before going incognito.
 
 1.0.2.1   - Improved layout.
